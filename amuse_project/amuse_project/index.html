@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" ng-app="APP">
+<head>
+	<meta charset="UTF-8">
+	<title> multicast simulator </title>
+	<style type="text/css">
+	p.nodeg {
+		border: 1px solid green ;
+	}
+	p.nodey {
+		border: 1px yellow ;
+	}
+	table.nodetable{
+		border: 1px black;
+	}
+	tr.nodeRow{
+		border: 1px black;
+	}
+
+
+	</style>
+</head>
+<body>
+<div ng-controller= "theController">
+	
+	<br />
+	<b ng-repeat="interval in Intervals">
+		{{interval}}
+		
+		<table class="nodetable">
+			<tr><td> here </td></tr>
+
+			<tr ng-repeat="area in interval" class="nodeRow">
+				<td><p> here again </p>
+				{{area}}
+				<div ng-repeat="node in area">
+					<p class="node{{node}}">
+					</p>
+				</div>
+			</td>
+			</tr>
+		</table>
+
+
+		<!--
+		<div ng-repeat= "img in {{item}}"> 
+			<IMG src = "url/{{img}}">{{img}}</IMG>
+		</div>
+	-->
+	</b>
+	<hr />
+	<input type="text" ng-model="something" />
+	
+</div>
+	<script src="http://code.angularjs.org/1.2.2/angular.min.js"> </script>
+	<script>
+	angular.module('APP', []).
+	controller('theController', ['$scope', '$interval', 
+		function($scope, $interval){
+			$scope.Intervals=[];
+			var dataDump = 
+
+			//[[6,7,6], [7,6,7], ['g', 'g', 'g'], ['y', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']];
+			
+			[
+				[
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']],
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']],
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']]
+				],
+
+				[
+					[['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']], [['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], 
+					[['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']],[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'y', 'g'], ['g', 'g', 'g']], 
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'g', 'y'], ['y', 'y', 'y']]
+				],
+
+				[
+					[['y', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'g', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']],
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']],
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']]
+				],
+
+				[ 
+					[['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']], [['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], 
+					[['y', 'y', 'y'], ['y', 'y', 'y'], ['y', 'y', 'y']],[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'y', 'g'], ['g', 'g', 'g']], 
+					[['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g'], ['g', 'g', 'g']], [['y', 'y', 'y'], ['y', 'g', 'y'], ['y', 'y', 'y']]
+				]
+
+			];
+			//$scope.items.push([1, 2, 3, 4, 5, 6, 7,])
+			// get double array of node objects returned by django
+			var i = 0;
+
+			var promise = $interval(function(){
+				$scope.Intervals.pop(); // pop last array of node objects
+				$scope.Intervals.push(dataDump[i++]); // push next array of last poped objects
+			}, 2000)
+			$scope.stop = function(){
+				$interval.cancel(promise)
+			}
+		}])
+	</script>
+</body>
+</html>
