@@ -173,7 +173,9 @@
 		function($scope, $interval){
 			
 
-			var dataDump = {{intervalList}}
+			var dataDump = {{intervalList}};
+
+			{% verbatim %}
 
 			/*[[6,7,6], [7,6,7], [0.95, 0.95, 0.95], [0.80, 0.95, 0.95], [0.95, 0.95, 0.95], [0.95, 0.95, 0.95]];
 			
@@ -630,6 +632,8 @@
 			$scope.COUNTER.pop();
 			$scope.COUNTER.push(i);
 
+			{% endverbatim %}
+
 			i = i + 1;
 			if(i == dataDump.length-1)
 			{
@@ -637,7 +641,7 @@
 			}
 
 				
-			}, 1000)
+			}, {{intervalList}})
 			$scope.stop = function(){
 				$interval.cancel(promise)
 			}
