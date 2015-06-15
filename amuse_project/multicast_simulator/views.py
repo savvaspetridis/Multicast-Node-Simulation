@@ -1,7 +1,7 @@
 # Savvas
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.template import RequestContext, loader
+from django.template import RequestContext, Context, loader
 
 from .models import *
 
@@ -97,10 +97,15 @@ def index(request):
 
 
     interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr, n17_arr]  
+    
+    c = {'intervalList': interv_list, 'interval': time_interval}
+    context = Context(c)
+
+
     # if time_interval = 1:
     # if time_interval = 2: 
 
-    return render(request, 'multicast_simulator/index.html', {'intervalList': interv_list})
+    return render(request, 'multicast_simulator/index.html', context)
 
 
 '''
