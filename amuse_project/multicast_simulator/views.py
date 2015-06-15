@@ -54,7 +54,7 @@ def index(request):
             n15_arr[x][y] = node.pdr_15
             n16_arr[x][y] = node.pdr_16
             n17_arr[x][y] = node.pdr_17
-
+        '''    
         i = 0
         j = 0 
 
@@ -94,18 +94,90 @@ def index(request):
                     n16_arr[i][j] = 0 
                 if n17_arr[i][j] == None:
                     n17_arr[i][j] = 0
+        '''
 
 
-    interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr, n17_arr]  
+        interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr, n17_arr]
+        fill_with_zero(interv_list) 
+
+        c = {'intervalList': interv_list, 'interval': time_interval}
+        context = Context(c)
     
-    c = {'intervalList': interv_list, 'interval': time_interval}
-    context = Context(c)
+        return render(request, 'multicast_simulator/index.html', context) 
+    
+    if time_interval == 1:
+
+        n1_arr = [[0 for x in range(20)] for x in range(20)]
+        n2_arr = [[0 for x in range(20)] for x in range(20)]
+        n3_arr = [[0 for x in range(20)] for x in range(20)]
+        n4_arr = [[0 for x in range(20)] for x in range(20)]
+        n5_arr = [[0 for x in range(20)] for x in range(20)]
+        n6_arr = [[0 for x in range(20)] for x in range(20)]
+        n7_arr = [[0 for x in range(20)] for x in range(20)]
+        n8_arr = [[0 for x in range(20)] for x in range(20)]
+
+        all_nodes = Interval_One.objects.filter(bit_rate=br)
+        
+        for node in all_nodes:
+            arr = node.name.split('-')
+            x = int(arr[0])-1 
+            y = int(arr[1])-1
+            n1_arr[x][y] = node.pdr_1
+            n2_arr[x][y] = node.pdr_2
+            n3_arr[x][y] = node.pdr_3
+            n4_arr[x][y] = node.pdr_4
+            n5_arr[x][y] = node.pdr_5
+            n6_arr[x][y] = node.pdr_6
+            n7_arr[x][y] = node.pdr_7
+            n8_arr[x][y] = node.pdr_8
+
+        interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr]
+        fill_with_zero(interv_list)
+
+        c = {'intervalList': interv_list, 'interval': time_interval}
+        context = Context(c)
+    
+        return render(request, 'multicast_simulator/index.html', context)
+    
+    if time_interval == 2: 
+
+        n1_arr = [[0 for x in range(20)] for x in range(20)]
+        n2_arr = [[0 for x in range(20)] for x in range(20)]
+        n3_arr = [[0 for x in range(20)] for x in range(20)]
+        n4_arr = [[0 for x in range(20)] for x in range(20)]
+
+        all_nodes = Interval_Two.objects.filter(bit_rate=br)
+        
+        for node in all_nodes:
+            arr = node.name.split('-')
+            x = int(arr[0])-1 
+            y = int(arr[1])-1
+            n1_arr[x][y] = node.pdr_1
+            n2_arr[x][y] = node.pdr_2
+            n3_arr[x][y] = node.pdr_3
+            n4_arr[x][y] = node.pdr_4
+
+        interv_list = [n1_arr, n2_arr, n3_arr, n4_arr]
+        fill_with_zero(interv_list)
+
+        c = {'intervalList': interv_list, 'interval': time_interval}
+        context = Context(c)
+    
+        return render(request, 'multicast_simulator/index.html', context)
 
 
-    # if time_interval = 1:
-    # if time_interval = 2: 
+def fill_with_zero(intervalList): 
+    for pdr_list in intervalList:
+        i = 0
+        j = 0 
+        for i in range(20):
+            for j in range(20):
+                if pdr_list[i][j] == None: 
+                    pdr_list[i][j] = 0
 
-    return render(request, 'multicast_simulator/index.html', context)
+
+
+
 
 
 '''
