@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+admin.site.register(Interval_pFive)
+admin.site.register(Interval_One)
+admin.site.register(Interval_Two)
+
+
