@@ -1,5 +1,16 @@
+
+
 <!doctype html>
 <html lang="en" ng-app="APP">
+<!--
+
+	do not alter any comments in this template as they will affect how django handles it
+
+
+{% verbatim %}
+
+
+-->
 <head>
 	<meta charset="UTF-8">
 	<title> multicast simulator </title>
@@ -36,16 +47,23 @@
 <div ng-controller= "theController" align = "center">
 	
 	<br />
+	
 	<label ng-repeat="options in showOptions" for="{{options}}">
+
+		
+
+
+
 		{{options}}
 
-		<input type="radio" ng-model="my.option" ng-value="options" id="{{options}}" name="option">
+		<input type="radio" ng-model="my.option" ng-value="options" id="{{options}}" name="option" >
 		
 
 	</label>
 
 	<p>{{my.option}}</p>
 	<b ng-repeat="interval in Intervals">
+
 		<h2 ng-repeat="counter in COUNTER">{{(counter+1) * .5}} seconds</h2>
 
 		
@@ -149,6 +167,8 @@
 		
 		</table>
 
+		
+
 
 		<!--
 		<div ng-repeat= "img in {{item}}"> 
@@ -165,17 +185,24 @@
 
 
 	<script src="http://code.angularjs.org/1.2.2/angular.min.js"> </script>
-	<script type="text/javascript" src="raphael-min.js"></script>
+	<script type="text/javascript" src="http://github.com/DmitryBaranovskiy/raphael/raw/master/raphael-min.js"></script>
+	<script src="dne"> </script>
 	
 	<script>
 	angular.module('APP', []).
 	controller('theController', ['$scope', '$interval', 
 		function($scope, $interval){
+
+			
+			//{% endverbatim %}
+
+			var dataDump = {{intervalList}}
+
 			
 
-			var dataDump = {{intervalList}};
+			
 
-			{% verbatim %}
+			
 
 			/*[[6,7,6], [7,6,7], [0.95, 0.95, 0.95], [0.80, 0.95, 0.95], [0.95, 0.95, 0.95], [0.95, 0.95, 0.95]];
 			
@@ -427,6 +454,8 @@
 			$scope.showOptions = ['Show Colors', 'Show PDR Values'];
 			$scope.my = {option : 'Show PDR Values'};
 			$scope.showVal = true;
+
+
 			
 			
 
@@ -434,7 +463,11 @@
 
 				$scope.Intervals.pop(); // pop last array of node objects
 				$scope.Intervals.push(dataDump[i]); // push next array of last poped objects
+
+				$scope.COUNTER.pop();
+				$scope.COUNTER.push(i);
 				//$scope.show.pop();
+
 				if($scope.my.option == "Show PDR Values")
 				{
 					$scope.showVal = true;
@@ -446,8 +479,17 @@
 				
 			//Creates canvas 320 × 200 at 10, 50
 			var currVals = dataDump[i];
+
+			
+
 			var imacPath = "M28.936,2.099H2.046c-0.506,0-0.919,0.414-0.919,0.92v21.097c0,0.506,0.413,0.919,0.919,0.919h17.062v-0.003h9.828c0.506,0,0.92-0.413,0.92-0.921V3.019C29.854,2.513,29.439,2.099,28.936,2.099zM28.562,20.062c0,0.412-0.338,0.75-0.75,0.75H3.062c-0.413,0-0.75-0.338-0.75-0.75v-16c0-0.413,0.337-0.75,0.75-0.75h24.75c0.412,0,0.75,0.337,0.75,0.75V20.062zM20.518,28.4c-0.033-0.035-0.062-0.055-0.068-0.062l-0.01-0.004l-0.008-0.004c0,0-0.046-0.021-0.119-0.062c-0.108-0.056-0.283-0.144-0.445-0.237c-0.162-0.097-0.32-0.199-0.393-0.271c-0.008-0.014-0.035-0.079-0.058-0.17c-0.083-0.32-0.161-0.95-0.22-1.539h-7.5c-0.023,0.23-0.048,0.467-0.076,0.691c-0.035,0.272-0.073,0.524-0.113,0.716c-0.02,0.096-0.039,0.175-0.059,0.23c-0.009,0.025-0.018,0.05-0.024,0.062c-0.003,0.006-0.005,0.01-0.007,0.013c-0.094,0.096-0.34,0.246-0.553,0.36c-0.107,0.062-0.209,0.11-0.283,0.146c-0.074,0.037-0.119,0.062-0.119,0.062l-0.007,0.004l-0.008,0.004c-0.01,0.009-0.038,0.022-0.07,0.062c-0.031,0.037-0.067,0.103-0.067,0.185c0.002,0.002-0.004,0.037-0.006,0.088c0,0.043,0.007,0.118,0.068,0.185c0.061,0.062,0.143,0.08,0.217,0.08h9.716c0.073,0,0.153-0.021,0.215-0.08c0.062-0.063,0.068-0.142,0.068-0.185c-0.001-0.051-0.008-0.086-0.007-0.088C20.583,28.503,20.548,28.439,20.518,28.4z";
 
+			//{% verbatim %}
+
+		
+
+			
+		
 
 			
 
@@ -491,6 +533,7 @@
 
 				
 				var areaCanvas = Raphael(horizontal, height, 320, 300);
+
 				var rect1 = areaCanvas.rect(50, 50, 215, 200);
 				rect1.attr("fill", "#fff");
 
@@ -602,37 +645,34 @@
 					
 
 				
-				}			
+				}		
 				
 			}
 		}
-		
 
 			var paper = Raphael(10, 10, 320, 200);
+
+			
 
 
 
 			paper.path(imacPath).attr({fill: "#000", stroke: "none"});
+			
 
-			// Creates circle at x = 50, y = 40, with radius 10
-			/*var rect1 = paper.rect(50, 50, 50, 50);
-			// Sets the fill attribute of the circle to red (#f00)
-			if(i == 0 || i == 2)
-			{
-				rect1.attr("fill", "#f00");
-			}
-			else
-			{
-				rect1.attr("fill", "#300");
-			}
 
-			// Sets the stroke attribute of the circle to white
-			rect1.attr("stroke", "#fff");*/
+		
 
-			$scope.COUNTER.pop();
-			$scope.COUNTER.push(i);
+		
 
-			{% endverbatim %}
+			
+
+			//{% endverbatim %}
+
+
+
+
+
+
 
 			i = i + 1;
 			if(i == dataDump.length-1)
@@ -641,7 +681,10 @@
 			}
 
 				
-			}, {{intervalList}})
+			}, {{interval}})
+		
+
+				
 			$scope.stop = function(){
 				$interval.cancel(promise)
 			}
