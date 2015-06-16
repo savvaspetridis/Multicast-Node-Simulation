@@ -83,7 +83,6 @@ def index(request):
                 context = Context(c)
                 '''
 
-                
                 c = RequestContext(request, {
                         'intervalList': interv_list,
                         'interval': time_interval,
@@ -123,10 +122,13 @@ def index(request):
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr]
                 fill_with_zero(interv_list)
 
-                c = {'intervalList': interv_list, 'interval': time_interval}
-                context = Context(c)
-    
-                return render(request, 'multicast_simulator/index.html', context)
+                c = RequestContext(request, {
+                        'intervalList': interv_list,
+                        'interval': time_interval,
+                        'form': form                       
+                    })
+                
+                return render(request, 'multicast_simulator/index.html', c) 
     
             if time_interval == 2: 
 
@@ -149,10 +151,13 @@ def index(request):
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr]
                 fill_with_zero(interv_list)
 
-                c = {'intervalList': interv_list, 'interval': time_interval}
-                context = Context(c)
-    
-                return render(request, 'multicast_simulator/index.html', context)
+                c = RequestContext(request, {
+                        'intervalList': interv_list,
+                        'interval': time_interval,
+                        'form': form                       
+                    })
+                
+                return render(request, 'multicast_simulator/index.html', c) 
     
     # if not a POST request:             
     else:
