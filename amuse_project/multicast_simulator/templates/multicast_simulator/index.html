@@ -16,10 +16,10 @@
 	<title> multicast simulator </title>
 	<style type="text/css">
 	p.nodeg {
-		border: 1px solid green ;
+		border: 1px solid green;
 	}
 	p.nodey {
-		border: 1px yellow ;
+		border: 1px yellow;
 	}
 	table, th, td {
 		border: 1px solid black;
@@ -44,7 +44,41 @@
 </head>
 <body>
 	<h1 align = "center"><b>Multicast Simulator</b></h1>
+
 <div ng-controller= "theController" align = "center">
+
+	<!--{% endverbatim %} -->
+
+
+
+	<form action="." method="post">
+		{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="Submit" />
+	</form>
+
+	<!-- {% verbatim %} -->
+	
+	<!--
+	Bit Rate (mbps):
+	<select name="bit_rate">
+  		<option value="6">6</option>
+  		<option value="9">9</option>
+  		<option value="12">12</option>
+  		<option value="18">18</option>
+  		<option value="24">24</option>
+  		<option value="36">36</option>
+  		<option value="48">48</option>
+  		<option value="54">54</option>
+	</select>
+
+	Update Interval (seconds): 
+	<select name="interval">
+  		<option value=".5">.5</option>
+  		<option value="1">1</option>
+  		<option value="2">2</option>
+	</select>
+	-->
 	
 	<br />
 	
@@ -186,7 +220,7 @@
 
 	<script src="http://code.angularjs.org/1.2.2/angular.min.js"> </script>
 	<script type="text/javascript" src="http://github.com/DmitryBaranovskiy/raphael/raw/master/raphael-min.js"></script>
-	<script src="dne"> </script>
+
 	
 	<script>
 	angular.module('APP', []).
@@ -492,7 +526,6 @@
 		
 
 			
-
 			if(!$scope.showVal)
 			{
 
@@ -657,6 +690,7 @@
 
 
 			paper.path(imacPath).attr({fill: "#000", stroke: "none"});
+
 			
 
 
