@@ -19,7 +19,6 @@ class Interval_pFive(models.Model):
     pdr_14 = models.FloatField()
     pdr_15 = models.FloatField()
     pdr_16 = models.FloatField()
-    pdr_17 = models.FloatField()
 
     def __str__(self):
         return self.name
