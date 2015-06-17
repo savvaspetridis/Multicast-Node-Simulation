@@ -23,10 +23,14 @@ def index(request):
             # extrapolate bit rate and time_interval from form
             br = form.cleaned_data['bitRate']
             time_interval = form.cleaned_data['updateInterval']
+            fb_algorithm = form.cleaned_data['fbNodeAlg']
 
             # if time interval is .5 seconds created 17 updates (slides) (should be 16)
             if time_interval == .5:
-        
+
+                # get all nodes with the corresponding bit rate entered
+                all_nodes = Interval_pFive.objects.filter(bit_rate=br)
+
                 n1_arr = [[0 for x in range(20)] for x in range(20)]
                 n2_arr = [[0 for x in range(20)] for x in range(20)]
                 n3_arr = [[0 for x in range(20)] for x in range(20)]
@@ -43,10 +47,6 @@ def index(request):
                 n14_arr = [[0 for x in range(20)] for x in range(20)]
                 n15_arr = [[0 for x in range(20)] for x in range(20)]
                 n16_arr = [[0 for x in range(20)] for x in range(20)]
-                n17_arr = [[0 for x in range(20)] for x in range(20)]
-
-                # get all nodes with the corresponding bit rate entered
-                all_nodes = Interval_pFive.objects.filter(bit_rate=br)
         
                 # each node is named 1-1, 1-2, 1-3, ... (first number is x, second number is y --> array placement)
                 for node in all_nodes:
@@ -71,17 +71,11 @@ def index(request):
                     n14_arr[x][y] = node.pdr_14
                     n15_arr[x][y] = node.pdr_15
                     n16_arr[x][y] = node.pdr_16
-                    n17_arr[x][y] = node.pdr_17
 
                 # master array consisting of 17, 20 by 20 matrices (which are the slides, each of which contains the 400 nodes' pdr values)
-                interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr, n17_arr]
+                interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr]
                 # fill irrelevant nodes with 0's
                 fill_with_zero(interv_list) 
-
-                '''
-                c = {'intervalList': interv_list, 'interval': time_interval, 'form': form}
-                context = Context(c)
-                '''
 
                 c = RequestContext(request, {
                         'intervalList': interv_list,
@@ -95,6 +89,8 @@ def index(request):
     
             if time_interval == 1:
 
+                all_nodes = Interval_One.objects.filter(bit_rate=br)
+
                 n1_arr = [[0 for x in range(20)] for x in range(20)]
                 n2_arr = [[0 for x in range(20)] for x in range(20)]
                 n3_arr = [[0 for x in range(20)] for x in range(20)]
@@ -103,8 +99,6 @@ def index(request):
                 n6_arr = [[0 for x in range(20)] for x in range(20)]
                 n7_arr = [[0 for x in range(20)] for x in range(20)]
                 n8_arr = [[0 for x in range(20)] for x in range(20)]
-
-                all_nodes = Interval_One.objects.filter(bit_rate=br)
         
                 for node in all_nodes:
                     arr = node.name.split('-')
@@ -132,12 +126,12 @@ def index(request):
     
             if time_interval == 2: 
 
+                all_nodes = Interval_Two.objects.filter(bit_rate=br)
+
                 n1_arr = [[0 for x in range(20)] for x in range(20)]
                 n2_arr = [[0 for x in range(20)] for x in range(20)]
                 n3_arr = [[0 for x in range(20)] for x in range(20)]
                 n4_arr = [[0 for x in range(20)] for x in range(20)]
-
-                all_nodes = Interval_Two.objects.filter(bit_rate=br)
         
                 for node in all_nodes:
                     arr = node.name.split('-')
@@ -163,7 +157,9 @@ def index(request):
     else:
         form = SimulationForm()
 
-    return render(request, 'multicast_simulator/index.html', {'form': form})
+    # return render(request, 'multicast_simulator/index.html', {'form': form})
+    return render(request, 'multicast_simulator/start.html', {'form': form})
+
 
 def fill_with_zero(intervalList): 
     for pdr_list in intervalList:
@@ -173,6 +169,7 @@ def fill_with_zero(intervalList):
             for j in range(20):
                 if pdr_list[i][j] == None: 
                     pdr_list[i][j] = 0
+
 
 
 # ------------------------------------------------------------------------------------------------
