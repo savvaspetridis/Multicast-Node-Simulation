@@ -26,7 +26,7 @@ def index(request):
             fb_algorithm = form.cleaned_data['fbNodeAlg']
 
             # if time interval is .5 seconds created 17 updates (slides) (should be 16)
-            if time_interval == .5:
+            if time_interval == 0.5:
 
                 # get all nodes with the corresponding bit rate entered
                 all_nodes = Interval_pFive.objects.filter(bit_rate=br)
