@@ -27,6 +27,29 @@
 	tr.nodeRow{
 		border: 1px black;
 	}
+	.green {
+		background-color: LightGreen;
+	}
+	.yellow
+	{
+		background-color: yellow;
+	}
+	.blue
+	{
+		background-color: LightBlue;
+	}
+	.red
+	{
+		background-color: red;
+	}
+	.grey
+	{
+		background-color: LightGrey;
+	}
+	.black
+	{
+		background-color: black;
+	}
 
   .my-input {
     -webkit-transition:all linear 0.5s;
@@ -82,7 +105,7 @@
 	
 	<br />
 	
-	<label ng-repeat="options in showOptions" for="{{options}}">
+	<!--<label ng-repeat="options in showOptions" for="{{options}}">
 
 		
 
@@ -95,10 +118,10 @@
 
 	</label>
 
-	<p>{{my.option}}</p>
+	<p>{{my.option}}</p>-->
 	<b ng-repeat="interval in Intervals">
 
-		<h2 ng-repeat="counter in COUNTER">{{(counter+1) * .5}} seconds</h2>
+		<h2 ng-repeat="counter in COUNTER">{{counter * intervalCount}} seconds</h2>
 
 		
 		<table class="nodetable" width = "75%" ng-show="showVal">
@@ -133,65 +156,65 @@
 			<tbody ng-repeat="area in interval">
 				<tr class="nodeRow">
 					<td>
-						{{$index+1}}-
+						{{$index+1}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][0][3], 'yellow' : classSelectors[0][$index][0][2], 'blue' : classSelectors[0][$index][0][1], 'grey' : classSelectors[0][$index][0][0], 'black' : classSelectors[0][$index][0][4]}">
 						{{area[0]}}
 					</td>
-					<td> 
+					<td ng-class = "{'green' : classSelectors[0][$index][1][3], 'yellow' : classSelectors[0][$index][1][2], 'blue' : classSelectors[0][$index][1][1], 'grey' : classSelectors[0][$index][1][0], 'black' : classSelectors[0][$index][1][4]}"> 
 						{{area[1]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][2][3], 'yellow' : classSelectors[0][$index][2][2], 'blue' : classSelectors[0][$index][2][1], 'grey' : classSelectors[0][$index][2][0], 'black' : classSelectors[0][$index][2][4]}">
 						{{area[2]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][3][3], 'yellow' : classSelectors[0][$index][3][2], 'blue' : classSelectors[0][$index][3][1], 'grey' : classSelectors[0][$index][3][0], 'black' : classSelectors[0][$index][3][4]}">
 						{{area[3]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][4][3], 'yellow' : classSelectors[0][$index][4][2], 'blue' : classSelectors[0][$index][4][1], 'grey' : classSelectors[0][$index][4][0], 'black' : classSelectors[0][$index][4][4]}">
 						{{area[4]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][5][3], 'yellow' : classSelectors[0][$index][5][2], 'blue' : classSelectors[0][$index][5][1], 'grey' : classSelectors[0][$index][5][0], 'black' : classSelectors[0][$index][5][4]}">
 						{{area[5]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][6][3], 'yellow' : classSelectors[0][$index][6][2], 'blue' : classSelectors[0][$index][6][1], 'grey' : classSelectors[0][$index][6][0], 'black' : classSelectors[0][$index][6][4]}">
 						{{area[6]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][7][3], 'yellow' : classSelectors[0][$index][7][2], 'blue' : classSelectors[0][$index][7][1], 'grey' : classSelectors[0][$index][7][0], 'black' : classSelectors[0][$index][7][4]}">
 						{{area[7]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][8][3], 'yellow' : classSelectors[0][$index][8][2], 'blue' : classSelectors[0][$index][8][1], 'grey' : classSelectors[0][$index][8][0], 'black' : classSelectors[0][$index][8][4]}">
 						{{area[8]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][9][3], 'yellow' : classSelectors[0][$index][9][2], 'blue' : classSelectors[0][$index][9][1], 'grey' : classSelectors[0][$index][9][0], 'black' : classSelectors[0][$index][9][4]}">
 						{{area[9]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][10][3], 'yellow' : classSelectors[0][$index][10][2], 'blue' : classSelectors[0][$index][10][1], 'grey' : classSelectors[0][$index][10][0], 'black' : classSelectors[0][$index][10][4]}">
 						{{area[10]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][11][3], 'yellow' : classSelectors[0][$index][11][2], 'blue' : classSelectors[0][$index][11][1], 'grey' : classSelectors[0][$index][11][0], 'black' : classSelectors[0][$index][11][4]}">
 						{{area[11]}}
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][12][3], 'yellow' : classSelectors[0][$index][12][2], 'blue' : classSelectors[0][$index][12][1], 'grey' : classSelectors[0][$index][12][0], 'black' : classSelectors[0][$index][12][4]}">
 						{{area[12]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][13][3], 'yellow' : classSelectors[0][$index][13][2], 'blue' : classSelectors[0][$index][13][1], 'grey' : classSelectors[0][$index][13][0], 'black' : classSelectors[0][$index][13][4]}">
 						{{area[13]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][14][3], 'yellow' : classSelectors[0][$index][14][2], 'blue' : classSelectors[0][$index][14][1], 'grey' : classSelectors[0][$index][14][0], 'black' : classSelectors[0][$index][14][4]}">
 						{{area[14]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][15][3], 'yellow' : classSelectors[0][$index][15][2], 'blue' : classSelectors[0][$index][15][1], 'grey' : classSelectors[0][$index][15][0],  'black' : classSelectors[0][$index][15][4]}">
 						{{area[15]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][16][3], 'yellow' : classSelectors[0][$index][16][2], 'blue' : classSelectors[0][$index][16][1], 'grey' : classSelectors[0][$index][16][0], 'black' : classSelectors[0][$index][16][4]}">
 						{{area[16]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][17][3], 'yellow' : classSelectors[0][$index][17][2], 'blue' : classSelectors[0][$index][17][1], 'grey' : classSelectors[0][$index][17][0], 'black' : classSelectors[0][$index][17][4]}">
 						{{area[17]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][18][3], 'yellow' : classSelectors[0][$index][18][2], 'blue' : classSelectors[0][$index][18][1], 'grey' : classSelectors[0][$index][18][0], 'black' : classSelectors[0][$index][18][4]}">
 						{{area[18]}}
 					</td>
-					<td>
+					<td ng-class = "{'green' : classSelectors[0][$index][19][3], 'yellow' : classSelectors[0][$index][19][2], 'blue' : classSelectors[0][$index][19][1], 'grey' : classSelectors[0][$index][19][0], 'black' : classSelectors[0][$index][19][4]}">
 						{{area[19]}}
 					</td>
 					<!--<td ng-repeat="node in area"><p>{{node}}</p></td>-->
@@ -478,7 +501,7 @@
 
 			];
 
-			*/
+			*/;
 			//$scope.items.push([1, 2, 3, 4, 5, 6, 7,])
 			// get double array of node objects returned by django
 			var i = 0;
@@ -488,6 +511,14 @@
 			$scope.showOptions = ['Show Colors', 'Show PDR Values'];
 			$scope.my = {option : 'Show PDR Values'};
 			$scope.showVal = true;
+			$scope.classSelectors = [];
+
+
+			
+
+			$scope.intervalCount = {{interval}};
+
+		
 
 
 			
@@ -500,7 +531,68 @@
 
 				$scope.COUNTER.pop();
 				$scope.COUNTER.push(i);
+				var currVals = dataDump[i];
 				//$scope.show.pop();
+				var intervalColors = [];
+				for(var j = 0; j < currVals.length; j++)
+				{
+					var areaColors = [];
+					var checkArray = currVals[j];
+					for(var l = 0; l < checkArray.length; l++)
+					{
+						var nodeColorBooleans = [];
+						
+						if (currVals[j][l] <= 25.0)
+						{
+							nodeColorBooleans.push(true);
+						}
+						else
+						{
+							nodeColorBooleans.push(false);
+						}
+
+						if (currVals[j][l] <= 50.0 && currVals[j][l] > 25.0)
+						{
+							nodeColorBooleans.push(true);
+						}
+						else
+						{
+							nodeColorBooleans.push(false);
+						}
+
+						if (currVals[j][l] <= 75.0 && currVals[j][l] > 50.0)
+						{
+							nodeColorBooleans.push(true);
+						}
+						else
+						{
+							nodeColorBooleans.push(false);
+						}
+
+						if (currVals[j][l] > 75.0)
+						{
+							nodeColorBooleans.push(true);
+						}
+						else
+						{
+							nodeColorBooleans.push(false);
+						}
+						if (currVals[j][l] < 0)
+						{
+							nodeColorBooleans.push(true);
+						}
+						else
+						{
+							nodeColorBooleans.push(false);
+						}
+						areaColors.push(nodeColorBooleans);
+						
+					}
+					intervalColors.push(areaColors);
+				}
+				$scope.classSelectors.pop();
+				$scope.classSelectors.push(intervalColors);
+					
 
 				if($scope.my.option == "Show PDR Values")
 				{
@@ -512,7 +604,12 @@
 				}
 				
 			//Creates canvas 320 × 200 at 10, 50
-			var currVals = dataDump[i];
+			
+			if(currVals[0][0] < 1)
+			{
+				classCheck = true;
+			}
+
 
 			
 
@@ -520,13 +617,13 @@
 
 			//{% verbatim %}
 
+
 		
 
 			
 		
 
-			
-			if(!$scope.showVal)
+			/*if(!$scope.showVal)
 			{
 
 			for(var areaNum = 0; areaNum < currVals.length; areaNum++)
@@ -689,7 +786,7 @@
 
 
 
-			paper.path(imacPath).attr({fill: "#000", stroke: "none"});
+			paper.path(imacPath).attr({fill: "#000", stroke: "none"});*/
 
 			
 
@@ -701,6 +798,8 @@
 			
 
 			//{% endverbatim %}
+
+			
 
 
 
@@ -715,14 +814,14 @@
 			}
 
 				
-			}, {{interval}}*1000)
+			}, {{interval}} * 1000)
 		
 
 				
 			$scope.stop = function(){
 				$interval.cancel(promise)
 			}
-		}])
+		}]);
 	</script>
 </body>
 </html>
