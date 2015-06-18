@@ -7,9 +7,23 @@
 	<body>
 		<h1 align = "center"><b>Multicast Simulator</b></h1>	
 		<div align = "center">
-			<form action="." method="post">
-				{% csrf_token %}
-				{{ form }}
+			<form action="." method="post"> {% csrf_token %}
+				<div class="fieldWrapper">
+					<label for="{{ form.bitRate.id_for_label }}">Bit Rate:</label>
+					{{ form.bitRate }}
+				</div>
+				<div class="fieldWrapper">
+					<label for="{{ form.updateInterval.id_for_label }}">Update Interval:</label>
+					{{ form.updateInterval }}
+				</div>
+				<div class="fieldWrapper">
+					<label for="{{ form.fbNodeAlg.id_for_label }}">F.B.N. Algorithm:</label>
+					{{ form.fbNodeAlg }}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">k:</label>
+					{{ form.k }}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">Distance (Amuse):</label>
+					{{ form.d }}
+				</div>
 				<input type="submit" value="Submit" />
 			</form>
 		</div> 
