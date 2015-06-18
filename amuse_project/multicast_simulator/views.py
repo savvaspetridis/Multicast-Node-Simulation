@@ -20,7 +20,7 @@ def index(request):
         # check if valid input 
         if form.is_valid():
             
-            # extrapolate bit rate and time_interval from form
+            # extrapolate entered bit rate, update interval, and feedback node selection algorithm from form
             br = form.cleaned_data['bitRate']
             time_interval = form.cleaned_data['updateInterval']
             fb_algorithm = form.cleaned_data['fbNodeAlg']
@@ -30,6 +30,16 @@ def index(request):
 
                 # get all nodes with the corresponding bit rate entered
                 all_nodes = Interval_pFive.objects.filter(bit_rate=br)
+
+                # if k_random algorithm for feedback node selection is chosen ... 
+                if(fb_algorithm == 'RAND'):
+                    k_Random(all_nodes, time_interval)
+
+                # if k_worst algorithm for feedback node selection is chosen ...
+                # if(fb_algorithm == 'WORST'):
+
+                # if amuse algorithm for feedback node selection is chosen ...
+                # if(fb_algorithm == 'AMUSE'):
 
                 n1_arr = [[0 for x in range(20)] for x in range(20)]
                 n2_arr = [[0 for x in range(20)] for x in range(20)]
@@ -55,22 +65,22 @@ def index(request):
                     y = int(arr[1])-1
                     
                     # multiple arrays for each 'slide' corresponding to the pdr at that specific interval
-                    n1_arr[x][y] = node.pdr_1
-                    n2_arr[x][y] = node.pdr_2
-                    n3_arr[x][y] = node.pdr_3
-                    n4_arr[x][y] = node.pdr_4
-                    n5_arr[x][y] = node.pdr_5
-                    n6_arr[x][y] = node.pdr_6
-                    n7_arr[x][y] = node.pdr_7
-                    n8_arr[x][y] = node.pdr_8
-                    n9_arr[x][y] = node.pdr_9
-                    n10_arr[x][y] = node.pdr_10
-                    n11_arr[x][y] = node.pdr_11
-                    n12_arr[x][y] = node.pdr_12
-                    n13_arr[x][y] = node.pdr_13
-                    n14_arr[x][y] = node.pdr_14
-                    n15_arr[x][y] = node.pdr_15
-                    n16_arr[x][y] = node.pdr_16
+                    n1_arr[x][y] = float("{0:.2f}".format(node.pdr_1 * 100)) # round to 2 decimals, multiply by 100
+                    n2_arr[x][y] = float("{0:.2f}".format(node.pdr_2 * 100))
+                    n3_arr[x][y] = float("{0:.2f}".format(node.pdr_3 * 100))
+                    n4_arr[x][y] = float("{0:.2f}".format(node.pdr_4 * 100))
+                    n5_arr[x][y] = float("{0:.2f}".format(node.pdr_5 * 100))
+                    n6_arr[x][y] = float("{0:.2f}".format(node.pdr_6 * 100))
+                    n7_arr[x][y] = float("{0:.2f}".format(node.pdr_7 * 100))
+                    n8_arr[x][y] = float("{0:.2f}".format(node.pdr_8 * 100))
+                    n9_arr[x][y] = float("{0:.2f}".format(node.pdr_9 * 100))
+                    n10_arr[x][y] = float("{0:.2f}".format(node.pdr_10 * 100))
+                    n11_arr[x][y] = float("{0:.2f}".format(node.pdr_11 * 100))
+                    n12_arr[x][y] = float("{0:.2f}".format(node.pdr_12 * 100))
+                    n13_arr[x][y] = float("{0:.2f}".format(node.pdr_13 * 100))
+                    n14_arr[x][y] = float("{0:.2f}".format(node.pdr_14 * 100))
+                    n15_arr[x][y] = float("{0:.2f}".format(node.pdr_15 * 100))
+                    n16_arr[x][y] = float("{0:.2f}".format(node.pdr_16 * 100))
 
                 # master array consisting of 17, 20 by 20 matrices (which are the slides, each of which contains the 400 nodes' pdr values)
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr]
@@ -104,14 +114,14 @@ def index(request):
                     arr = node.name.split('-')
                     x = int(arr[0])-1 
                     y = int(arr[1])-1
-                    n1_arr[x][y] = node.pdr_1
-                    n2_arr[x][y] = node.pdr_2
-                    n3_arr[x][y] = node.pdr_3
-                    n4_arr[x][y] = node.pdr_4
-                    n5_arr[x][y] = node.pdr_5
-                    n6_arr[x][y] = node.pdr_6
-                    n7_arr[x][y] = node.pdr_7
-                    n8_arr[x][y] = node.pdr_8
+                    n1_arr[x][y] = float("{0:.2f}".format(node.pdr_1 * 100))
+                    n2_arr[x][y] = float("{0:.2f}".format(node.pdr_2 * 100))
+                    n3_arr[x][y] = float("{0:.2f}".format(node.pdr_3 * 100))
+                    n4_arr[x][y] = float("{0:.2f}".format(node.pdr_4 * 100))
+                    n5_arr[x][y] = float("{0:.2f}".format(node.pdr_5 * 100))
+                    n6_arr[x][y] = float("{0:.2f}".format(node.pdr_6 * 100))
+                    n7_arr[x][y] = float("{0:.2f}".format(node.pdr_7 * 100))
+                    n8_arr[x][y] = float("{0:.2f}".format(node.pdr_8 * 100))
 
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr]
                 fill_with_zero(interv_list)
@@ -137,10 +147,10 @@ def index(request):
                     arr = node.name.split('-')
                     x = int(arr[0])-1 
                     y = int(arr[1])-1
-                    n1_arr[x][y] = node.pdr_1
-                    n2_arr[x][y] = node.pdr_2
-                    n3_arr[x][y] = node.pdr_3
-                    n4_arr[x][y] = node.pdr_4
+                    n1_arr[x][y] = float("{0:.2f}".format(node.pdr_1 * 100))
+                    n2_arr[x][y] = float("{0:.2f}".format(node.pdr_2 * 100))
+                    n3_arr[x][y] = float("{0:.2f}".format(node.pdr_3 * 100))
+                    n4_arr[x][y] = float("{0:.2f}".format(node.pdr_4 * 100))
 
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr]
                 fill_with_zero(interv_list)
@@ -169,6 +179,11 @@ def fill_with_zero(intervalList):
             for j in range(20):
                 if pdr_list[i][j] == None: 
                     pdr_list[i][j] = 0
+
+def k_Random(allNodes, interv):
+    print('lol')
+
+
 
 
 
