@@ -168,11 +168,30 @@ def index(request):
     return render(request, 'multicast_simulator/start.html', {'form': form})
 
 def k_Random(allNodes, interv, k):
-    upper_bound = 20 # 20 nodes for both x and y direction
+    slides = int((10/interv)-4) 
+    print('slides: ' + str(slides))
+    ret_arr = [[[0 for x in range(20)] for x in range(20)] for x in range(slides)]
+    upper_bound = 19 # 20 nodes for both x and y direction
     fbNum = k 
     random.seed()
-    rant = random.randint(0, upper_bound)
-    print(str(rant))
+    x_co = [0 for x in range(fbNum)]  
+    y_co = [0 for x in range(fbNum)]
+
+    # get x and y coordinates for randomly chosen fb nodes
+    
+    z = 0
+    for z in range(slides):
+        j = 0
+        for j in range(fbNum):
+            x = random.randint(0, upper_bound)
+            #print('x: ' + str(x))
+            y = random.randint(0, upper_bound)
+            #print('y: ' + str(y))
+            # ret_arr[x][y][z] = 1
+            #print('z: ' + str(z))
+
+        
+    #print(ret_arr)
     
 
 
