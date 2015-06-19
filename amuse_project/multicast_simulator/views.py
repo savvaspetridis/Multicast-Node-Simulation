@@ -10,6 +10,7 @@ from django.template import RequestContext, Context, loader
 
 from .models import *
 from .forms import *
+import random
 
 def index(request):
     
@@ -24,6 +25,8 @@ def index(request):
             br = form.cleaned_data['bitRate']
             time_interval = form.cleaned_data['updateInterval']
             fb_algorithm = form.cleaned_data['fbNodeAlg']
+            k = form.cleaned_data['k']
+            dist = form.cleaned_data['d']
 
             # if time interval is .5 seconds created 17 updates (slides) (should be 16)
             if time_interval == 0.5:
@@ -33,7 +36,7 @@ def index(request):
 
                 # if k_random algorithm for feedback node selection is chosen ... 
                 if(fb_algorithm == 'RAND'):
-                    k_Random(all_nodes, time_interval)
+                    k_Random(all_nodes, time_interval, k)
 
                 # if k_worst algorithm for feedback node selection is chosen ...
                 # if(fb_algorithm == 'WORST'):
@@ -84,8 +87,6 @@ def index(request):
 
                 # master array consisting of 17, 20 by 20 matrices (which are the slides, each of which contains the 400 nodes' pdr values)
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr]
-                # fill irrelevant nodes with 0's
-                fill_with_zero(interv_list) 
 
                 c = RequestContext(request, {
                         'intervalList': interv_list,
@@ -93,9 +94,7 @@ def index(request):
                         'form': form                       
                     })
                 
-    
                 return render(request, 'multicast_simulator/index.html', c) 
-                #return render_to_response('multicast_simulator/index.html', c)
     
             if time_interval == 1:
 
@@ -124,7 +123,6 @@ def index(request):
                     n8_arr[x][y] = float("{0:.2f}".format(node.pdr_8 * 100))
 
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr]
-                fill_with_zero(interv_list)
 
                 c = RequestContext(request, {
                         'intervalList': interv_list,
@@ -153,7 +151,6 @@ def index(request):
                     n4_arr[x][y] = float("{0:.2f}".format(node.pdr_4 * 100))
 
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr]
-                fill_with_zero(interv_list)
 
                 c = RequestContext(request, {
                         'intervalList': interv_list,
@@ -170,18 +167,13 @@ def index(request):
     # return render(request, 'multicast_simulator/index.html', {'form': form})
     return render(request, 'multicast_simulator/start.html', {'form': form})
 
-
-def fill_with_zero(intervalList): 
-    for pdr_list in intervalList:
-        i = 0
-        j = 0 
-        for i in range(20):
-            for j in range(20):
-                if pdr_list[i][j] == None: 
-                    pdr_list[i][j] = 0
-
-def k_Random(allNodes, interv):
-    print('lol')
+def k_Random(allNodes, interv, k):
+    upper_bound = 20 # 20 nodes for both x and y direction
+    fbNum = k 
+    random.seed()
+    rant = random.randint(0, upper_bound)
+    print(str(rant))
+    
 
 
 
