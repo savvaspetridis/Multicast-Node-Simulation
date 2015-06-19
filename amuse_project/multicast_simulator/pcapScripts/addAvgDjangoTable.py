@@ -492,9 +492,7 @@ for inter in selectIntervals:
 	isSender = 0
 	for singleNode in database:
 		
-		if isSender == 0:
-			isSender = isSender + 1
-			continue
+		
 		
 		#toSend = "INSERT INTO " + str(MBPS) + str(inter) + " VALUES ("
 		avgValsSingleNode = []
