@@ -12,7 +12,7 @@
 #2013-02-20 04:16:05 - End of experiment
 
 echo "import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "amuse_project.settings")
+os.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"amuse_project.settings\")
 # your imports, e.g. Django models
 from multicast_simulator.models import Interval_pFive, Interval_One, Interval_Two" > DjangoQueries.py
 
