@@ -34,20 +34,10 @@ def index(request):
                 # get all nodes with the corresponding bit rate entered
                 all_nodes = Interval_pFive.objects.filter(bit_rate=br)
                 interv_list = create_interv_list(time_interval, br, all_nodes)
-
-                # if k_random algorithm for feedback node selection is chosen ... 
-                if(fb_algorithm == 'RAND'):
-                    fb_list = k_Random(time_interval, k)
-
-                # if k_worst algorithm for feedback node selection is chosen ...
-                if(fb_algorithm == 'WORST'):
-                    fb_list = k_Worst(br, time_interval, k)
-
-                # if amuse algorithm for feedback node selection is chosen ...
-                # if(fb_algorithm == 'AMUSE'):
+                fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br)
 
                 c = RequestContext(request, {
-                        # 'fbList': fb_list,
+                        'fbList': fb_list,
                         'intervalList': interv_list,
                         'interval': time_interval,
                         'form': form                       
@@ -71,7 +61,6 @@ def index(request):
                 all_nodes = Interval_Two.objects.filter(bit_rate=br)
                 interv_list = create_interv_list(time_interval, br, all_nodes)
 
-
                 c = RequestContext(request, {
                         'intervalList': interv_list,
                         'interval': time_interval,
@@ -84,30 +73,55 @@ def index(request):
     else:
         form = SimulationForm()
 
-    # return render(request, 'multicast_simulator/index.html', {'form': form})
     return render(request, 'multicast_simulator/start.html', {'form': form})
 
+def create_interv_list(timeInt, bitRate, allNodes):
+    slides = int((8/timeInt)) 
+    interv_list = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
+
+    z = 0
+    while(z < slides):
+        for node in allNodes:
+            num = z + 1
+            pdr_val = getattr(node, 'pdr_' + str(num))
+            arr = node.name.split('-')
+            x = int(arr[0])-1 
+            y = int(arr[1])-1
+            interv_list[z][x][y] = float("{0:.2f}".format(pdr_val * 100))
+        z = z + 1
+    
+    return interv_list
+
+def runFeedbackAlg(func_name, time_interval, k, br):
+    if func_name == 'RAND':
+        return k_Random(time_interval, k)
+    elif func_name == 'WORST':
+        return k_Worst(br, time_interval, k)
+    else:
+        return amuse()
+
 def k_Random(interv, k):
-    slides = int((10/interv)-4) 
-    ret_arr = [[[0 for z in range(slides)] for y in range(20)] for x in range(20)]
-    upper_bound = 19 # 20 nodes for both x and y direction
-    fbNum = k 
+    slides = int((8/interv)) 
+    ret_arr = [[[0 for z in range(20)] for y in range(20)] for x in range(slides)]
+    upper_bound = 19 # 20 nodes for both x and y direction 
     random.seed()
     
     z = 0
-    for z in range(slides):
+    while(z < slides):
         j = 0
-        for j in range(fbNum):
+        while(j < k):
             x = random.randint(0, upper_bound)
             y = random.randint(0, upper_bound)
-            ret_arr[x][y][z] = 1
+            ret_arr[z][x][y] = 1
+            j = j + 1
+        z = z + 1
 
     return ret_arr
 
 def k_Worst(br, interv, k):
-    slides = int((10/interv)-4) 
+    slides = int((8/timeInt)) 
     print("slides: " + str(slides))
-    ret_arr = [[[0 for c in range(slides)] for b in range(20)] for a in range(20)]
+    ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
     all_nodes = Interval_pFive.objects.filter(bit_rate=br)
     
     count = 1
@@ -130,21 +144,7 @@ def k_Worst(br, interv, k):
 
     return ret_arr
 
-def create_interv_list(timeInt, bitRate, allNodes):
-    slides = int((8/timeInt)) 
-    interv_list = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
-
-    z = 0
-    while(z < slides):
-        for node in allNodes:
-            num = z + 1
-            print('z: ' + str(z))
-            print('num: ' + str(num))
-            pdr_val = getattr(node, 'pdr_' + str(num))
-            arr = node.name.split('-')
-            x = int(arr[0])-1 
-            y = int(arr[1])-1
-            interv_list[z][x][y] = float("{0:.2f}".format(pdr_val * 100))
-        z = z + 1
-    
-    return interv_list
+def amuse():
+    print('im not working yet, lol')
+    ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(5)] # change last range!!
+    return ret_arr
