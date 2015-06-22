@@ -36,10 +36,14 @@ def index(request):
 
                 # if k_random algorithm for feedback node selection is chosen ... 
                 if(fb_algorithm == 'RAND'):
-                    k_Random(all_nodes, time_interval, k)
+                    fb_list = k_Random(time_interval, k)
 
                 # if k_worst algorithm for feedback node selection is chosen ...
-                # if(fb_algorithm == 'WORST'):
+                if(fb_algorithm == 'WORST'):
+                    print('WORST!!!!!!!!!!!!!!!!')
+                    fb_list = k_Worst(br, time_interval, k)
+
+                print(fb_list)
 
                 # if amuse algorithm for feedback node selection is chosen ...
                 # if(fb_algorithm == 'AMUSE'):
@@ -89,6 +93,7 @@ def index(request):
                 interv_list = [n1_arr, n2_arr, n3_arr, n4_arr, n5_arr, n6_arr, n7_arr, n8_arr, n9_arr, n10_arr, n11_arr, n12_arr, n13_arr, n14_arr, n15_arr, n16_arr]
 
                 c = RequestContext(request, {
+                        'fbList': fb_list,
                         'intervalList': interv_list,
                         'interval': time_interval,
                         'form': form                       
@@ -167,34 +172,48 @@ def index(request):
     # return render(request, 'multicast_simulator/index.html', {'form': form})
     return render(request, 'multicast_simulator/start.html', {'form': form})
 
-def k_Random(allNodes, interv, k):
+def k_Random(interv, k):
     slides = int((10/interv)-4) 
-    print('slides: ' + str(slides))
-    ret_arr = [[[0 for x in range(20)] for x in range(20)] for x in range(slides)]
+    ret_arr = [[[0 for z in range(slides)] for y in range(20)] for x in range(20)]
     upper_bound = 19 # 20 nodes for both x and y direction
     fbNum = k 
     random.seed()
-    x_co = [0 for x in range(fbNum)]  
-    y_co = [0 for x in range(fbNum)]
-
-    # get x and y coordinates for randomly chosen fb nodes
     
     z = 0
     for z in range(slides):
         j = 0
         for j in range(fbNum):
             x = random.randint(0, upper_bound)
-            #print('x: ' + str(x))
             y = random.randint(0, upper_bound)
-            #print('y: ' + str(y))
-            # ret_arr[x][y][z] = 1
-            #print('z: ' + str(z))
+            ret_arr[x][y][z] = 1
 
-        
-    #print(ret_arr)
+    return ret_arr
+
+def k_Worst(br, interv, k):
+    slides = int((10/interv)-4) 
+    print("slides: " + str(slides))
+    ret_arr = [[[0 for c in range(slides)] for b in range(20)] for a in range(20)]
+    all_nodes = Interval_pFive.objects.filter(bit_rate=br)
     
+    count = 1
+    while(count <= slides):
+        num = str(count)
+        print(num)
+        s = all_nodes.order_by('pdr_' + num)
+        s = s[:k]
+        for node in s:
+            arr = node.name.split('-')
+            print(arr)
+            x = int(arr[0])-1
+            print('x: ' + str(x)) 
+            y = int(arr[1])-1
+            print('y: ' + str(y))
+            z = int(num)-1
+            print('z: ' + str(z))
+            ret_arr[z][y][x] = 1
+        count = count + 1
 
-
+    return ret_arr
 
 
 
