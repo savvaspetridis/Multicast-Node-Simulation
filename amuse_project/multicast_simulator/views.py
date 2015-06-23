@@ -195,17 +195,37 @@ def amuse(br, interv, d, all_nodes):
     s = all_nodes
     
     count = 1
-    while(count <= slides):
+    while count <= slides:
+        # num is used to delineate which pdr value to take
         num = str(count)
-        # order in ascending fashion by pdr for that specific slide
-        s = s.order_by('pdr_' + num)
-        worst = s[0]
-        arr_worst = worst.name.split('-')
-        x_w = int(arr[0])
-        y_w = int(arr[1])
-
-
-
+        # while list of all 'active' nodes != 0
+        while s.count() != 0:
+            # order in ascending fashion by pdr for that specific slide
+            s = s.order_by('pdr_' + num)
+            print(s)
+            print('\n')
+            # node with worst pdr is the first node
+            worst = s[0]
+            arr_worst = worst.name.split('-')
+            # get x and y coordinates of worst node
+            x_w = int(arr_worst[0])
+            y_w = int(arr_worst[1])
+            # go through the rest of the nodes
+            for node in s:
+                # if this particular node is not the worst node
+                if node != worst:
+                    # get its x and y coordinates
+                    arr = node.name.split('-')
+                    x2 = int(arr[0])
+                    y2 = int(arr[1])
+                    # calculate distance using their coordinates // distance formula
+                    calc_dist = calc_distance(x_w, x2, y_w, y2)
+                    # if input distance is greater than calculated distance
+                    if d >= calc_dist:
+                        # remove this particular node (it is within D)
+                        s = s.exclude(name=node.name)
+            # remove current 'worst' node, so it is not chosen again
+            s = s.exclude(name=worst.name)
         count = count + 1
     return ret_arr
 
