@@ -11,6 +11,7 @@ from django.template import RequestContext, Context, loader
 from .models import *
 from .forms import *
 import random
+import math
 
 def index(request):
     
@@ -47,7 +48,7 @@ def index(request):
 
                 # if an algorithm is entered, send a list of feedback nodes
                 else:
-                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br)
+                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br, dist, all_nodes)
 
                     c = RequestContext(request, {
                         'fbList': fb_list,
@@ -72,7 +73,7 @@ def index(request):
                     return render(request, 'multicast_simulator/index.html', c) 
 
                 else:
-                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br)
+                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br, dist, all_nodes)
 
                     c = RequestContext(request, {
                         'fbList': fb_list,
@@ -97,7 +98,7 @@ def index(request):
                     return render(request, 'multicast_simulator/index.html', c) 
 
                 else:
-                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br)
+                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br, dist, all_nodes)
 
                     c = RequestContext(request, {
                         'fbList': fb_list,
@@ -137,27 +138,29 @@ def create_interv_list(timeInt, bitRate, allNodes):
     
     return interv_list
 
-def runFeedbackAlg(func_name, time_interval, k, br):
+def runFeedbackAlg(func_name, time_interval, k, br, dist, nodes):
     if func_name == 'RAND':
-        return k_Random(time_interval, k)
+        return k_Random(br, time_interval, k, nodes)
     elif func_name == 'WORST':
-        return k_Worst(br, time_interval, k)
+        return k_Worst(br, time_interval, k, nodes)
     else:
-        return amuse()
+        return amuse(br, time_interval, dist, nodes)
 
 # randomly choose k nodes with any pdr's (other than 0) as the feedback nodes
-def k_Random(interv, k):
+def k_Random(br, interv, k, all_nodes):
     slides = int((8/interv)) 
     ret_arr = [[[0 for z in range(20)] for y in range(20)] for x in range(slides)]
-    upper_bound = 19 # 20 nodes for both x and y direction 
     random.seed()
+    end = all_nodes.count()-1
     
     z = 0
     while(z < slides):
         j = 0
         while(j < k):
-            x = random.randint(0, upper_bound)
-            y = random.randint(0, upper_bound)
+            index = random.randint(0, end)
+            arr = all_nodes[index].name.split('-')
+            x = int(arr[0])-1
+            y = int(arr[1])-1
             ret_arr[z][x][y] = 1
             j = j + 1
         z = z + 1
@@ -165,10 +168,9 @@ def k_Random(interv, k):
     return ret_arr
 
 # choose k nodes with the lowest pdr's as the feedback nodes
-def k_Worst(br, interv, k):
+def k_Worst(br, interv, k, all_nodes):
     slides = int((8/interv)) 
     ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
-    all_nodes = Interval_pFive.objects.filter(bit_rate=br)
     
     count = 1
     while(count <= slides):
@@ -186,7 +188,28 @@ def k_Worst(br, interv, k):
 
     return ret_arr
 
-def amuse():
-    print('im not working yet, lol')
-    ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(5)] # change last range!!
+# amuse algorithm for choosing feedback nodes
+def amuse(br, interv, d, all_nodes):
+    slides = int((8/interv)) 
+    ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
+    s = all_nodes
+    
+    count = 1
+    while(count <= slides):
+        num = str(count)
+        # order in ascending fashion by pdr for that specific slide
+        s = s.order_by('pdr_' + num)
+        worst = s[0]
+        arr_worst = worst.name.split('-')
+        x_w = int(arr[0])
+        y_w = int(arr[1])
+
+
+
+        count = count + 1
     return ret_arr
+
+# distance formula
+def calc_distance(x1, x2, y1, y2):
+    return math.sqrt((math.pow((x1-x2),2) + math.pow((y1-y2),2)))
+
