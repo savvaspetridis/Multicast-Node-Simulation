@@ -27,13 +27,14 @@ class SimulationForm(forms.Form):
 
 	
 	ALGORITHMS = (
+		('NONE', 'None'),
 		('RAND', 'k_Random'),
 		('WORST', 'k_Worst'),
 		('AMUSE', 'Amuse'),
 	)
 	
 	fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS)
-	k = forms.IntegerField(label='k')
-	d = forms.IntegerField(label='Distance:')
+	k = forms.IntegerField(label='k', required=False)
+	d = forms.IntegerField(label='Distance:', required=False)
 
 
