@@ -14,7 +14,8 @@ class SimulationForm(forms.Form):
 		(54, 54), 
 	)
 
-	bitRate = forms.TypedChoiceField(coerce=int, empty_value=0, label='Bit Rate', choices=BITRATES)
+	# bitRate = forms.TypedChoiceField(coerce=int, empty_value=0, label='Bit Rate', choices=BITRATES) #original
+	bitRate = forms.ChoiceField(required=False, label='Bit Rate', choices=BITRATES, widget=forms.Select(attrs={'ng-show' : 'showBitRate'}))
 
 	
 	INTERVALS = (
@@ -23,7 +24,8 @@ class SimulationForm(forms.Form):
 		(2.0, 2.0),
 	)
 
-	updateInterval = forms.TypedChoiceField(coerce=float, empty_value=0.0, label='Update Interval', choices=INTERVALS)
+	updateInterval = forms.TypedChoiceField(coerce=float, empty_value=0.0, label='Update Interval', choices=INTERVALS) # origninal
+	# updateInterval = forms.ChoiceField(required=False, label='Update Interval', choices=INTERVALS)
 
 	
 	ALGORITHMS = (
@@ -33,8 +35,14 @@ class SimulationForm(forms.Form):
 		('AMUSE', 'Amuse'),
 	)
 	
-	fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS)
-	k = forms.IntegerField(label='k', required=False)
-	d = forms.IntegerField(label='Distance:', required=False)
+	# Raphael: just added widget field
+	fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS, widget=forms.Select(attrs={'ng-model' : 'my.option'}))
+	# fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS) # orignal
+	
+	# Raphael: just added widgets again
+	k = forms.IntegerField(label='k', required=False, widget=forms.NumberInput(attrs={'ng-show' : 'showK'}))
+	# k = forms.IntegerField(label='k', required=False) # original
+	d = forms.IntegerField(label='Distance:', required=False, widget=forms.NumberInput(attrs={'ng-show' : 'showDistance'}))
+	# d = forms.IntegerField(label='Distance:', required=False) # original
 
 
