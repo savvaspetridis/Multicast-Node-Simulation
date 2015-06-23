@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="app">
 	<head>
 		<title>Start Simulation</title>
+		<script src="http://code.angularjs.org/1.2.2/angular.min.js"> </script>
 	</head>
 
 	<body>
 		<h1 align = "center"><b>Multicast Simulator</b></h1>	
-		<div align = "center">
+		<div align = "center" ng-controller= "startController">
 			<form action="." method="post"> {% csrf_token %}
-				<div class="fieldWrapper">
-					<label for="{{ form.bitRate.id_for_label }}">Bit Rate:</label>
+				<div class="fieldWrapper" ng-show="showBitRate">
+					<label for="{{ form.bitRate.id_for_label }}" >Bit Rate:</label>
 					{{ form.bitRate }}
 				</div>
 				<div class="fieldWrapper">
@@ -19,14 +20,49 @@
 				<div class="fieldWrapper">
 					<label for="{{ form.fbNodeAlg.id_for_label }}">F.B.N. Algorithm:</label>
 					{{ form.fbNodeAlg }}
-					<label for="{{ form.fbNodeAlg.id_for_label }}">k:</label>
+					<label for="{{ form.fbNodeAlg.id_for_label }}" ng-show="showK">k:</label>
 					{{ form.k }}
-					<label for="{{ form.fbNodeAlg.id_for_label }}">Distance (Amuse):</label>
+					<label for="{{ form.fbNodeAlg.id_for_label }}" ng-show="showDistance">Distance (Amuse):</label>
 					{{ form.d }}
 				</div>
 				<input type="submit" value="Submit" />
+				<p> {{my.option}} 9</p>
 			</form>
-		</div> 
+		</div>
+		<script>
+		var app = angular.module('app', []);
+		app.controller('startController', ['$scope',
+			function($scope)
+			{
+				$scope.showBitRate = true;
+				$scope.showK = false;
+				$scope.showDistance = false;
+				$scope.algorithms = ['NONE', 'WORST', 'RAND', 'AMUSE'];
+				$scope.my ={option : 'NONE'};
+
+
+				if($scope.my.option != 'NONE')
+				{
+					$scope.showBitRate = false;
+					$scope.showK = true;
+				}
+				else
+				{
+					$scope.showBitRate = true;
+					$scope.showK = false;
+				}
+
+				if($scope.my.option == 'AMUSE')
+				{
+					$scope.showDistance = true;
+				}
+				else
+				{
+					$scope.showDistance = false;
+				}
+			}]);
+
+		</script> 
 
 	</body>
 </html>

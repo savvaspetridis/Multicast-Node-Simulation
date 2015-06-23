@@ -221,20 +221,32 @@ they will affect how django parses the code.
 				var currVals = dataDump[i];
 				var intervalColors = [];
 				var currFeed = $scope.feedbackNodes[i];
-				if($scope.my.option != 'NONE')
+				if($scope.my.option == 'NONE')
 				{
-					$scope.showBitRate = false;
-					$scope.showK = true;
+					$scope.showBitRate = true;
+					//$scope.showK = false;
+					//$scope.showDistance = false
+
 				}
 				else
 				{
-					$scope.showBitRate = true;
+					$scope.showBitRate = false;
+				}
+
+				if($scope.my.option == 'RAND' || $scope.my.option == 'WORST')
+				{
+					$scope.showK = true;
+					$scope.showDistance = false;
+				}
+				else
+				{
 					$scope.showK = false;
 				}
 
 				if($scope.my.option == 'AMUSE')
 				{
 					$scope.showDistance = true;
+					//$scope.showK = false;
 				}
 				else
 				{
