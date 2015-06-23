@@ -36,78 +36,47 @@ def index(request):
                 all_nodes = Interval_pFive.objects.filter(bit_rate=br)
                 interv_list = create_interv_list(time_interval, br, all_nodes)
                 
-                # if no algorithm is entered, don't send a list of feedback nodes
-                if fb_algorithm == 'NONE':
-                    c = RequestContext(request, {
-                        'intervalList': interv_list,
-                        'interval': time_interval,
-                        'form': form                       
-                    })
-                    
-                    return render(request, 'multicast_simulator/index.html', c) 
+               
+                fb_list = run_feedback_alg(fb_algorithm, time_interval, k, br, dist, all_nodes)
 
-                # if an algorithm is entered, send a list of feedback nodes
-                else:
-                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br, dist, all_nodes)
-
-                    c = RequestContext(request, {
-                        'fbList': fb_list,
-                        'intervalList': interv_list,
-                        'interval': time_interval,
-                        'form': form                       
-                    })
+                c = RequestContext(request, {
+                    'fbList': fb_list,
+                    'intervalList': interv_list,
+                    'interval': time_interval,
+                    'form': form                       
+                })
                 
-                    return render(request, 'multicast_simulator/index.html', c) 
+                return render(request, 'multicast_simulator/index.html', c) 
     
             if time_interval == 1:
                 all_nodes = Interval_One.objects.filter(bit_rate=br)
                 interv_list = create_interv_list(time_interval, br, all_nodes)
 
-                if fb_algorithm == 'NONE':
-                    c = RequestContext(request, {
-                        'intervalList': interv_list,
-                        'interval': time_interval,
-                        'form': form                       
-                    })
+                fb_list = run_feedback_alg(fb_algorithm, time_interval, k, br, dist, all_nodes)
 
-                    return render(request, 'multicast_simulator/index.html', c) 
-
-                else:
-                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br, dist, all_nodes)
-
-                    c = RequestContext(request, {
-                        'fbList': fb_list,
-                        'intervalList': interv_list,
-                        'interval': time_interval,
-                        'form': form                       
-                    })
+                c = RequestContext(request, {
+                    'fbList': fb_list,
+                    'intervalList': interv_list,
+                    'interval': time_interval,
+                    'form': form                       
+                })
                 
-                    return render(request, 'multicast_simulator/index.html', c) 
+                return render(request, 'multicast_simulator/index.html', c) 
     
             if time_interval == 2: 
                 all_nodes = Interval_Two.objects.filter(bit_rate=br)
                 interv_list = create_interv_list(time_interval, br, all_nodes)
 
-                if fb_algorithm == 'NONE':
-                    c = RequestContext(request, {
-                        'intervalList': interv_list,
-                        'interval': time_interval,
-                        'form': form                       
-                    })
+                fb_list = run_feedback_alg(fb_algorithm, time_interval, k, br, dist, all_nodes)
 
-                    return render(request, 'multicast_simulator/index.html', c) 
-
-                else:
-                    fb_list = runFeedbackAlg(fb_algorithm, time_interval, k, br, dist, all_nodes)
-
-                    c = RequestContext(request, {
-                        'fbList': fb_list,
-                        'intervalList': interv_list,
-                        'interval': time_interval,
-                        'form': form                       
-                    })
+                c = RequestContext(request, {
+                    'fbList': fb_list,
+                    'intervalList': interv_list,
+                    'interval': time_interval,
+                    'form': form                       
+                })
                 
-                    return render(request, 'multicast_simulator/index.html', c) 
+                return render(request, 'multicast_simulator/index.html', c) 
     
     # if not a POST request:             
     else:
@@ -138,17 +107,20 @@ def create_interv_list(timeInt, bitRate, allNodes):
     
     return interv_list
 
-def runFeedbackAlg(func_name, time_interval, k, br, dist, nodes):
-    if func_name == 'RAND':
-        return k_Random(br, time_interval, k, nodes)
+def run_feedback_alg(func_name, time_interval, k, br, dist, nodes):
+    slides = int((8/time_interval))
+    if func_name == 'NONE':
+        ret_arr = [[[0 for z in range(20)] for y in range(20)] for x in range(slides)]
+        return ret_arr
+    elif func_name == 'RAND':
+        return k_random(br, slides, k, nodes)
     elif func_name == 'WORST':
-        return k_Worst(br, time_interval, k, nodes)
+        return k_worst(br, slides, k, nodes)
     else:
-        return amuse(br, time_interval, dist, nodes)
+        return amuse(br, slides, dist, nodes)
 
 # randomly choose k nodes with any pdr's (other than 0) as the feedback nodes
-def k_Random(br, interv, k, all_nodes):
-    slides = int((8/interv)) 
+def k_random(br, slides, k, all_nodes):
     ret_arr = [[[0 for z in range(20)] for y in range(20)] for x in range(slides)]
     random.seed()
     end = all_nodes.count()-1
@@ -168,8 +140,7 @@ def k_Random(br, interv, k, all_nodes):
     return ret_arr
 
 # choose k nodes with the lowest pdr's as the feedback nodes
-def k_Worst(br, interv, k, all_nodes):
-    slides = int((8/interv)) 
+def k_worst(br, slides, k, all_nodes):
     ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
     
     count = 1
@@ -189,8 +160,7 @@ def k_Worst(br, interv, k, all_nodes):
     return ret_arr
 
 # amuse algorithm for choosing feedback nodes
-def amuse(br, interv, d, all_nodes):
-    slides = int((8/interv)) 
+def amuse(br, slides, d, all_nodes):
     ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
     s = all_nodes
     
@@ -225,6 +195,7 @@ def amuse(br, interv, d, all_nodes):
                         # remove this particular node (it is within D)
                         s = s.exclude(name=node.name)
             # remove current 'worst' node, so it is not chosen again
+            ret_arr[z][x][y] = 1
             s = s.exclude(name=worst.name)
         count = count + 1
     return ret_arr
