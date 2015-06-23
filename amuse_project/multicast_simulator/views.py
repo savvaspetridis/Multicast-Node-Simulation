@@ -163,9 +163,10 @@ def k_worst(br, slides, k, all_nodes):
 def amuse(br, slides, d, all_nodes):
     ret_arr = [[[0 for c in range(20)] for b in range(20)] for a in range(slides)]
     s = all_nodes
-    
+    print('slides: ' + str(slides))
     count = 1
     while count <= slides:
+        s = all_nodes
         # num is used to delineate which pdr value to take
         num = str(count)
         # while list of all 'active' nodes != 0
@@ -180,6 +181,7 @@ def amuse(br, slides, d, all_nodes):
             # get x and y coordinates of worst node
             x_w = int(arr_worst[0])
             y_w = int(arr_worst[1])
+            ret_arr[count-1][x_w-1][y_w-1] = 1
             # go through the rest of the nodes
             for node in s:
                 # if this particular node is not the worst node
@@ -195,7 +197,6 @@ def amuse(br, slides, d, all_nodes):
                         # remove this particular node (it is within D)
                         s = s.exclude(name=node.name)
             # remove current 'worst' node, so it is not chosen again
-            ret_arr[z][x][y] = 1
             s = s.exclude(name=worst.name)
         count = count + 1
     return ret_arr
