@@ -173,8 +173,6 @@ def amuse(br, slides, d, all_nodes):
         while s.count() != 0:
             # order in ascending fashion by pdr for that specific slide
             s = s.order_by('pdr_' + num)
-            print(s)
-            print('\n')
             # node with worst pdr is the first node
             worst = s[0]
             arr_worst = worst.name.split('-')
@@ -192,7 +190,7 @@ def amuse(br, slides, d, all_nodes):
                     y2 = int(arr[1])
                     # calculate distance using their coordinates // distance formula
                     calc_dist = calc_distance(x_w, x2, y_w, y2)
-                    # if input distance is greater than calculated distance
+                    # if input distance is greater than or equal to the calculated distance
                     if d >= calc_dist:
                         # remove this particular node (it is within D)
                         s = s.exclude(name=node.name)
