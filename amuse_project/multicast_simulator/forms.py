@@ -36,7 +36,8 @@ class SimulationForm(forms.Form):
 	)
 	
 	# Raphael: just added widget field
-	fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS, widget=forms.Select(attrs={'ng-model' : 'my.option'}))
+	fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS, widget=forms.Select(attrs={'ng-model' : 'my.option', 'ng-change' : 'check()'}))
+	# widget=forms.Select(attrs={ 'ng-change' = 'check()'}))
 	# fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS) # orignal
 	
 	# Raphael: just added widgets again
