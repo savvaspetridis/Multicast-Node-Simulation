@@ -41,6 +41,10 @@ def index(request):
                 })
                 
             return render(request, 'multicast_simulator/index.html', c) 
+    else:
+        form = SimulationForm()
+
+    return render(request, 'multicast_simulator/start.html', {'form': form})
 
 
 def get_ret_slide(request):
