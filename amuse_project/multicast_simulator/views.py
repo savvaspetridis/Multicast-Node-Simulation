@@ -36,7 +36,7 @@ def index(request):
                     'dist': dist,
                     'bit_rate': br,
                     'interval': time_interval,
-                    'fb_alg': fb_algorithm,
+                    'alg': fb_algorithm,
                     'form': form                       
                 })
                 
