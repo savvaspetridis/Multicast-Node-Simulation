@@ -41,9 +41,23 @@ class SimulationForm(forms.Form):
 	# fbNodeAlg = forms.ChoiceField(label='Feedback Node Algorithm', required=False, choices=ALGORITHMS) # orignal
 	
 	# Raphael: just added widgets again
-	k = forms.IntegerField(label='k', required=False, widget=forms.NumberInput(attrs={'ng-show' : 'showK'}))
+	k = forms.IntegerField(label='k', required=False, widget=forms.NumberInput(attrs={'ng-show' : 'showK', 'ng-model': 'k_nodes'}))
 	# k = forms.IntegerField(label='k', required=False) # original
-	d = forms.IntegerField(label='Distance:', required=False, widget=forms.NumberInput(attrs={'ng-show' : 'showDistance'}))
+	d = forms.IntegerField(label='Distance:', required=False, widget=forms.NumberInput(attrs={'ng-show' : 'showDistance', 'ng-model': 'distance'}))
 	# d = forms.IntegerField(label='Distance:', required=False) # original
+
+
+	# for rate adaptation. may change from float or integer fields or vice versa
+	
+
+	H = forms.FloatField(label='H-low Threshold', required=False)
+	Delta = forms.FloatField(label='Delta', required=False)
+	W_min = forms.IntegerField(label='Window minimum', required=False)
+	W_max = forms.IntegerField(label='Window maximum', required=False)
+	time = forms.FloatField(label='Time:', required=False)
+	A_max = forms.IntegerField(label='Maximum abnormal nodes', required=False)
+
+
+
 
 

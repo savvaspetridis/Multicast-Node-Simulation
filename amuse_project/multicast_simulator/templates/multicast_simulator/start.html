@@ -25,9 +25,31 @@
 					<label for="{{ form.fbNodeAlg.id_for_label }}" ng-show="showDistance">Distance (Amuse):</label>
 					{{ form.d }}
 				</div>
+				<div class="fieldWrapper" ng-show="showDistance">
+					<label for="{{ form.fbNodeAlg.id_for_label }}">H-low Threshold</label>
+					{{ form.H}}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">Variability of PDR allowed</label>
+					{{ form.Delta}}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">Window minimum</label>
+					{{ form.W_min}}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">Window maximum</label>
+					{{ form.W_max}}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">Time</label>
+					{{ form.time}}
+					<label for="{{ form.fbNodeAlg.id_for_label }}">Maximum abnormal nodes</label>
+					{{ form.A_max}}
+					
+
+
+				</div>
+				<div>
+						<!--{% verbatim %}--><p> {{k_nodes}} 9 </p>
+						{{distance}}<!--{% endverbatim %}-->
+					</div>
 				<input type="submit" value="Submit" />
 				
 			</form>
+			
 		</div>
 		<script>
 		var app = angular.module('app', []);
@@ -39,6 +61,8 @@
 				$scope.showDistance = false;
 				$scope.algorithms = ['NONE', 'WORST', 'RAND', 'AMUSE'];
 				$scope.my ={option : 'NONE'};
+				$scope.k_nodes = 0;
+				$scope.distance = 0;
 
 
 
