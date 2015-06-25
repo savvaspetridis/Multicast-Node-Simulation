@@ -7,6 +7,7 @@ made: June 2015
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext, Context, loader
+# from django.utils import simplejson
 
 from .models import *
 from .forms import *
@@ -36,7 +37,7 @@ def index(request):
                     'dist': dist,
                     'bit_rate': br,
                     'interval': time_interval,
-                    'fb_alg': fb_algorithm,
+                    'alg': fb_algorithm,
                     'form': form                       
                 })
                 
@@ -48,45 +49,57 @@ def index(request):
 
 
 def get_ret_slide(request):
+
+    print "hey"
     
-    if request.is_ajax():
-        if request.method == 'POST':
-            received_json_data = json.loads(request.body)
-            
-            br = freceived_json_data['b_rate']
-            time_interval = received_json_data['updateInterval']
-            fb_algorithm = received_json_data['Algorithm']
-            interv_count = received_json_data['count']
-            k = received_json_data['k']
-            d = received_json_data['dist']
+    # if request.is_ajax():
+    print "is ajax"
+    if request.method == 'POST':
+        print "is post"
+        received_json_data = json.loads(request.body)
+        print "jason worked"
+        print received_json_data
+        
+        br = freceived_json_data["b_rate"]
+        time_interval = received_json_data['updateInterval']
+        fb_algorithm = received_json_data['Algorithm']
+        interv_count = received_json_data['count']
+        k = received_json_data['k']
+        d = received_json_data.dist
+        print k
+        print str(d)
+        print str(fb_algorithm)
+        print str(br)
+        print str(time_interval)
+        print str(interv_count)
 
-            if time_interval == .5:
+        if time_interval == .5:
 
-                all_nodes = Interval_pFive.objects.filter(bit_rate=br)
-                ret_slide = create_ret_slide(interv_count, br, all_nodes)
-                fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, nodes)
+            all_nodes = Interval_pFive.objects.filter(bit_rate=br)
+            ret_slide = create_ret_slide(interv_count, br, all_nodes)
+            fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, nodes)
 
-                resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
-                return JsonResponse(resp_data)
+            resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
+            return JsonResponse(resp_data)
 
-            elif time_interval == 1:
+        elif time_interval == 1:
 
-                all_nodes = Interval_One.objects.filter(bit_rate=br)
-                ret_slide = create_ret_slide(interv_count, br, all_nodes)
-                fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, nodes)
+            all_nodes = Interval_One.objects.filter(bit_rate=br)
+            ret_slide = create_ret_slide(interv_count, br, all_nodes)
+            fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, nodes)
 
-                resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
-                return JsonResponse(resp_data)
+            resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
+            return JsonResponse(resp_data)
 
-            #if time_interval == 2: 
-            else:
+        #if time_interval == 2: 
+        else:
 
-                all_nodes = Interval_Two.objects.filter(bit_rate=br)
-                ret_slide = create_ret_slide(interv_count, br, all_nodes)
-                fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, nodes)
+            all_nodes = Interval_Two.objects.filter(bit_rate=br)
+            ret_slide = create_ret_slide(interv_count, br, all_nodes)
+            fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, nodes)
 
-                resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
-                return JsonResponse(resp_data)
+            resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
+            return JsonResponse(resp_data)
 
 
 
