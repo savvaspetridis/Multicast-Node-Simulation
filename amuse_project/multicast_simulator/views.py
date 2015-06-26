@@ -20,6 +20,7 @@ def index(request):
 
     # if post request:
     if request.method == 'POST':
+        print "index method"
         form = SimulationForm(request.POST)
 
         # check if the input is valid:
@@ -38,29 +39,49 @@ def index(request):
                     'bit_rate': br,
                     'interval': time_interval,
                     'alg': fb_algorithm,
-                    'form': form                       
+                    'form': form,                       
                 })
                 
             return render(request, 'multicast_simulator/index.html', c) 
     else:
         form = SimulationForm()
 
-    return render(request, 'multicast_simulator/start.html', {'form': form})
+        return render(request, 'multicast_simulator/start.html', {'form': form})
 
 
 def get_ret_slide(request):
 
-    print "hey"
-    
+    print "get_ret_slide"
     # if request.is_ajax():
-    print "is ajax"
     if request.method == 'POST':
+
+        data=json.loads(request.body)
+        count = data[u'count']
+        time_interval = data[u'updateInterval']
+        dist = data[u'dist']
+        k = data[u'k']
+        algorithm = data[u'Algorithm']
+        print data
+
+        
+        # return HttpResponse('')
+        
+
+
+
+        '''
         print "is post"
         received_json_data = json.loads(request.body)
+
+        print received_json_data
+        print 'yo'
+        print request.body['updateInterval']
+
         print "jason worked"
         print received_json_data
-        
-        br = freceived_json_data["b_rate"]
+        '''
+        '''
+        br = received_json_data["b_rate"]
         time_interval = received_json_data['updateInterval']
         fb_algorithm = received_json_data['Algorithm']
         interv_count = received_json_data['count']
@@ -72,6 +93,7 @@ def get_ret_slide(request):
         print str(br)
         print str(time_interval)
         print str(interv_count)
+        '''
 
         if time_interval == .5:
 
