@@ -94,22 +94,12 @@ def get_ret_slide(request):
         #if time_interval == 2: 
         else:
 
-            print "step 1"
             all_nodes = Interval_Two.objects.filter(bit_rate=br)
-            print "step 2"
-            print str(interv_count)
-            print str(br)
-            print str(all_nodes)
-
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
-            print "step 3"
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
-            print "step 4"
 
             # resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
             response = JsonResponse({'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br})
-            print response
-            print "step 5"
             return response
             
             
@@ -133,11 +123,7 @@ def create_ret_slide(count, bitRate, allNodes):
     return ret_slide
 
 def run_feedback_alg(func_name, count, k, dist, nodes):
-    print "in run_feedback_alg method!"
-    print func_name
-    # slides = int((8/time_interval))
     if func_name == 'NONE':
-        print "func name is NONE!"
         ret_arr = [[0 for z in range(20)] for y in range(20)]
         return ret_arr
     elif func_name == 'RAND':
@@ -150,6 +136,7 @@ def run_feedback_alg(func_name, count, k, dist, nodes):
 def k_random(k, all_nodes):
     ret_slide = [[0 for y in range(20)] for x in range(20)]
     random.seed()
+    end = all_nodes.count()-1
 
     j = 0
     while j < k:
