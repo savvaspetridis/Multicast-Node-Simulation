@@ -51,35 +51,23 @@ def index(request):
 
 def get_ret_slide(request):
 
-    #print "get_ret_slide"
-    # if request.is_ajax():
     if request.method == 'POST':
 
         data = json.loads(request.body)
-
-        # print data
         interv_count = int(data[u'count'])
         print "interv_count: " + str(interv_count)
         time_interval = float(data[u'updateInterval'])
         dist = int(data[u'dist'])
         k = int(data[u'k'])
         fb_algorithm = str(data[u'Algorithm'])
-        # print str(fb_algorithm)
         br = int(data[u'b_rate'])
 
         if time_interval == .5:
 
-            print 'time_interval is .5'
-
-            #print "step 1"
             all_nodes = Interval_pFive.objects.filter(bit_rate=br)
-            #print "step 2"
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
-            #print "step 3"
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
-
             resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br}
-            # print resp_data
             return JsonResponse(resp_data)
 
         elif time_interval == 1:
@@ -87,18 +75,14 @@ def get_ret_slide(request):
             all_nodes = Interval_One.objects.filter(bit_rate=br)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
-
             resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br}
             return JsonResponse(resp_data)
 
-        #if time_interval == 2: 
         else:
 
             all_nodes = Interval_Two.objects.filter(bit_rate=br)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
-
-            # resp_data = {'pdr_set': 'ret_slide', 'feedback_set': 'fb_nodes', 'bit_rate': 'br'}
             response = JsonResponse({'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br})
             return response
             
