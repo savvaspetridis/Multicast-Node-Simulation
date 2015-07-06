@@ -155,7 +155,6 @@ def k_random(k, all_nodes, interv_count):
 
 def k_worst(k, all_nodes, interv_count):
     
-    print('hey')
     ret_slide = [[0 for y in range(20)] for x in range(20)]
     num = str(interv_count)
     s = all_nodes.order_by('pdr_' + num)
@@ -183,7 +182,7 @@ def amuse(d, all_nodes, interv_count):
     print "order end"
 
     while s.count() != 0:
-        print "enter while loop of pain and misery!!"
+        print "enter while loop of count"
         worst = s[0]
         print "while loop 1"
         arr_worst = worst.name.split('-')
@@ -199,7 +198,7 @@ def amuse(d, all_nodes, interv_count):
         s = s.exclude(name=worst.name)
         print "while loop 6"
         # go through the rest of the nodes
-        print "enter for loop of death!!!!!!"
+        print "enter for loop (for rest of nodes)"
         iteration = 0
         for node in s:
             print "count: " + str(iteration)
