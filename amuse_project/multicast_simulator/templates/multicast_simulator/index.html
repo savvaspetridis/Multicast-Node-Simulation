@@ -44,7 +44,7 @@ they will affect how django parses the code.
 
 	}
 	.feedback{
-		outline: green dotted thick;
+		outline: red dotted thick;
 	}
 	.green {
 		background-color: LightGreen;	 
@@ -59,7 +59,7 @@ they will affect how django parses the code.
 	}
 	.red
 	{
-		background-color: red;
+		background-color: FireBrick;
 	}
 	.grey
 	{
@@ -106,6 +106,20 @@ they will affect how django parses the code.
 			{{ form.k }}
 			<label for="{{ form.fbNodeAlg.id_for_label }}" ng-show="showDistance">Distance (Amuse):</label>
 			{{ form.d }}
+		</div>
+		<div class="fieldWrapper" ng-hidew="showBitRate">
+			<label for="{{ form.fbNodeAlg.id_for_label }}">H-low Threshold</label>
+			{{ form.H}}
+			<label for="{{ form.fbNodeAlg.id_for_label }}">Variability of PDR allowed</label>
+			{{ form.Delta}}
+			<label for="{{ form.fbNodeAlg.id_for_label }}">Window minimum</label>
+			{{ form.W_min}}
+			<label for="{{ form.fbNodeAlg.id_for_label }}">Window maximum</label>
+			{{ form.W_max}}
+			<label for="{{ form.fbNodeAlg.id_for_label }}">Time</label>
+			{{ form.time}}
+			<label for="{{ form.fbNodeAlg.id_for_label }}">Maximum abnormal nodes</label>
+			{{ form.A_max}}
 		</div>
 		<input type="submit" value="Submit"  />
 	</form>
@@ -157,7 +171,7 @@ they will affect how django parses the code.
 						to finish adding a color see the comments inside the angular controller
 
 					-->
-					<td ng-repeat= "node in area track by $index" ng-class = "{'feedback' : classSelectors[$parent.$index][$index][0], 'grey' : classSelectors[$parent.$index][$index][1], 'blue' : classSelectors[$parent.$index][$index][2], 'yellow' : classSelectors[$parent.$index][$index][3], 'green' : classSelectors[$parent.$index][$index][4] }">
+					<td ng-repeat= "node in area track by $index" ng-class = "{'feedback' : classSelectors[$parent.$index][$index][0], 'grey' : classSelectors[$parent.$index][$index][1], 'blue' : classSelectors[$parent.$index][$index][2], 'yellow' : classSelectors[$parent.$index][$index][3], 'green' : classSelectors[$parent.$index][$index][4], 'black' : classSelectors[$parent.$index][$index][5], 'red' : classSelectors[$parent.$index][$index][6] }">
 						{{node}}
 					</td>
 
@@ -293,7 +307,7 @@ they will affect how django parses the code.
 							}
 
 							
-							if (currVals[j][l] <= 25.0)
+							if (currVals[j][l] == 0.0)
 							{
 								nodeColorBooleans.push(true);
 							}
@@ -336,6 +350,23 @@ they will affect how django parses the code.
 							{
 								nodeColorBooleans.push(false);
 							}
+							if(currVals[j][l] == -100.0) // or if(currVals[j][l] == someValue)
+							{
+								nodeColorBooleans.push(true);
+							}
+							else
+							{
+								nodeColorBooleans.push(false);
+							}
+							if(currVals[j][l] <= 25.0 && currVals[j][l] > 0.0) // or if(currVals[j][l] == someValue)
+							{
+								nodeColorBooleans.push(true);
+							}
+							else
+							{
+								nodeColorBooleans.push(false);
+							}
+
 
 							// add any new if-else conditionals (as described above) here
 

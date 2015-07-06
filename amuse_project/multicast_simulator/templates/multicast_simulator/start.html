@@ -25,7 +25,7 @@
 					<label for="{{ form.fbNodeAlg.id_for_label }}" ng-show="showDistance">Distance (Amuse):</label>
 					{{ form.d }}
 				</div>
-				<div class="fieldWrapper" ng-show="showDistance">
+				<div class="fieldWrapper" ng-hide="showBitRate">
 					<label for="{{ form.fbNodeAlg.id_for_label }}">H-low Threshold</label>
 					{{ form.H}}
 					<label for="{{ form.fbNodeAlg.id_for_label }}">Variability of PDR allowed</label>
