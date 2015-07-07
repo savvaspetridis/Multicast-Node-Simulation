@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'amuse_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbamuse',
-        'USER': 'amuse',
-        'PASSWORD': 'narnia123',
+        'NAME': 'test',
+        'USER': 'postgres',
+        'PASSWORD': 'wko845',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -104,4 +104,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+# all added for static, can be taken off for production (we'll just use a link to github)
+
 STATIC_URL = '/static/'
+STATIC_ROOT = '/Users/shannonnorwitz/mcast-sim1/bin/Multicast-Node-Simulation/amuse_project/static/'
+
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+
+STATICFILES_DIRS = (
+  os.path.join(SITE_ROOT, 'static/'),
+)
+
