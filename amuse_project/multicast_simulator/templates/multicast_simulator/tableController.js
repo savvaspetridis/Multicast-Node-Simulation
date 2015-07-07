@@ -190,7 +190,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 				$scope.bit_rate = $scope.bit_rate_update;
 
 					
-			}, {{interval}} * 1000);
+			}, intervalCount * 1000);
 	};
 			
 	$scope.stop = function(){
