@@ -190,7 +190,7 @@ var app = angular.module('app', []).config(function($httpProvider) {
 					$scope.bit_rate = $scope.bit_rate_update;
 
 						
-				}, {{interval}} * 1000);
+				}, intervalCount * 1000);
 		};
 				
 		$scope.stop = function(){
@@ -261,5 +261,5 @@ var app = angular.module('app', []).config(function($httpProvider) {
 		};
 
 
-		$scope.play();
+		//$scope.play();
 	}]);
