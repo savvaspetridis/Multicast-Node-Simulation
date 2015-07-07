@@ -146,7 +146,6 @@ def k_worst(k, all_nodes, interv_count):
     for node in s:
         pdr_val = getattr(node, 'pdr_' + num)
         if pdr_val > 0:
-            print(str(pdr_val))
             arr = node.name.split('-')
             x = int(arr[0])-1
             y = int(arr[1])-1
@@ -157,39 +156,99 @@ def k_worst(k, all_nodes, interv_count):
 
     return ret_slide
 
+
+'''
 def amuse(d, all_nodes, interv_count):
-    
+
     ret_slide = [[0 for y in range(20)] for x in range(20)]
     num = str(interv_count)
     s = all_nodes
-    print "order start"
     s = s.order_by('pdr_' + num)
-    print "order end"
 
-    while s.count() != 0:
-        print "enter while loop of count"
+    print "not done"
+
+    for node in s:
+        pdr_val = getattr(node, 'pdr_' + num)
+        name = str(node.name)
+
+
+    create_amuse_list(s, num)
+
+    
+
+
+
+
+
+    print "done"
+    return ret_slide
+'''
+
+def create_amuse_list(ordered_list, n):
+    
+    node_list = [0 for x in range(ordered_list.count())]
+    print node_list
+    i = 0
+    for node in ordered_list:
+        pdr_val = getattr(node, 'pdr_' + n)
+        if pdr_val > 0:
+            node_list[i] = str(node.name)
+            i = i + 1
+        else: 
+            del node_list[i]
+
+    '''
+    i = 0
+    while i < len(node_list):
+        if node_list[i] == 'X':
+            del node_list[i]
+        i = i + 1
+    '''
+
+    # print node_list
+    return node_list
+
+
+
+def amuse(d, all_nodes, interv_count):
+
+    ret_slide = [[0 for y in range(20)] for x in range(20)]
+    num = str(interv_count)
+    s = all_nodes
+    print "oh god"
+
+    # s = s.order_by('pdr_' + num)
+
+    print "list ordered"
+    s = create_amuse_list(s, num)
+
+    print "list made"
+
+    while len(s) != 0:
+        # print('length: ' + str(len(s)))
+        # get worst node
+        # worst = s.pop()
+
         worst = s[0]
-        print "while loop 1"
-        arr_worst = worst.name.split('-')
-        print "while loop 2"
+        del s[0]
+
+        print("worst: " + worst)
+        # remove worst node from list
+        
+        arr_worst = worst.split('-')
         # get x and y coordinates of worst node
         x_w = int(arr_worst[0])
-        print "while loop 3"
         y_w = int(arr_worst[1])
-      
-
+        # note feed-back node in grid
         ret_slide[x_w][y_w] = 1
-        print "while loop 5"
-        s = s.exclude(name=worst.name)
-        print "while loop 6"
-        # go through the rest of the nodes
-        print "enter for loop (for rest of nodes)"
-        iteration = 0
-        for node in s:
-            print "count: " + str(iteration)
+
+        i = 0
+        while i < len(s):
+            # print "here"
 
             # get its x and y coordinates
-            arr = node.name.split('-')
+            node = s[i]
+            arr = node.split('-')
             x2 = int(arr[0])
             y2 = int(arr[1])
             # calculate distance using their coordinates // distance formula
@@ -197,14 +256,13 @@ def amuse(d, all_nodes, interv_count):
             # if input distance is greater than or equal to the calculated distance
             if d >= calc_dist:
                 # remove this particular node (it is within D)
-                print "exclude begin"
-                s = s.exclude(name=node.name)
-                print "exclude end"
-            iteration = iteration + 1
-    print "returned!!"
+                del s[i]
+            i = i + 1
+        print('length: ' + str(len(s)))
+    print "returned!"
     return ret_slide
 
-
+'''
 # main rate adaption algorithm
 def adapt_rate(lowest_rate, w_min, interv_count):
     rate = lowest_rate
@@ -213,9 +271,6 @@ def adapt_rate(lowest_rate, w_min, interv_count):
     ref_time = interv_count
 
 
-
-
-'''
 # window size determination
 def get_window_size():
 
