@@ -1,4 +1,4 @@
-var app = angular.module('app', []).config(function($httpProvider) {
+var app = angular.module('app', ['chart.js'] ).config(function($httpProvider) {
 $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 });
@@ -17,6 +17,12 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		//this serves as the counter for the controller and it is updated every interval
 		$scope.i = 1;
 		$scope.totalTime = 0; 
+		$scope.bit_rates_graph = []
+		$scope.bit_rates_graph.push(6)
+		$scope.times_graph =[]
+		$scope.times_graph.push(0.0)
+		$scope.series = ['Series A',];
+
 
 
 
@@ -57,6 +63,8 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 			promise = $interval(function(){
 				$scope.fetch();
+
+				$scope.numSlides = (8.0 / $scope.intervalCount);
 
 
 				//$scope.Interval; // set the interval equal to the ith index in the dataDump variable
@@ -188,7 +196,10 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					$scope.i = 1;
 				}
 
-				$scope.bit_rate = $scope.bit_rate_update;
+				$scope.times_graph.push($scope.COUNTER * $scope.intervalCount)
+				$scope.bit_rates_graph.push($scope.bit_rate_update)
+
+				$scope.bit_rate = $scope.bit_rate_update
 
 					
 			}, $scope.intervalCount * 1000);
@@ -264,3 +275,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 	//$scope.play();
 }]);
+
+
+
+

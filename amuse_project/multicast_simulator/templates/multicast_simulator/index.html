@@ -71,12 +71,14 @@ they will affect how django parses the code.
 	}
 
 	</style>
+	<style src="https://rawgit.com/jtblin/angular-chart.js/master/dist/angular-chart.css"> </style>
 
 	<!--these scripts import angular and raphael js-->
 	<script src="http://code.angularjs.org/1.2.2/angular.min.js"> </script>
-	<script type="text/javascript" src="http://github.com/DmitryBaranovskiy/raphael/raw/master/raphael-min.js"></script>
-	<script src="bower_components/angular-chart.js/angular-chart.js"></script>
-	<script src="bower_compnents/Chart.js/Chart.min.js"></script>
+	<script src="https://rawgit.com/nnnick/Chart.js/master/Chart.min.js"></script>
+	<script src="https://rawgit.com/jtblin/angular-chart.js/master/dist/angular-chart.js"></script>
+	
+	<!--<script src="https://code.angularjs.org/X.Y.Z/angular-route.js"> </script>-->
 
 
 
@@ -111,7 +113,7 @@ they will affect how django parses the code.
 			<label for="{{ form.fbNodeAlg.id_for_label }}" ng-show="showDistance">Distance (Amuse):</label>
 			{{ form.d }}
 		</div>
-		<div class="fieldWrapper" ng-hidew="showBitRate">
+		<div class="fieldWrapper" ng-hide="showBitRate">
 			<label for="{{ form.fbNodeAlg.id_for_label }}">H-low Threshold</label>
 			{{ form.H}}
 			<label for="{{ form.fbNodeAlg.id_for_label }}">Variability of PDR allowed</label>
@@ -186,6 +188,20 @@ they will affect how django parses the code.
 			
 		
 		</table>
+
+		<div align="right">
+			<!--{% verbatim %}-->
+			<!--<canvas id="line" class="chart chart-line ng-scope" data="bit_rates_graph" labels="times_graph" legend="true" series="series">
+			</canvas>-->
+
+			
+			<!--{% endverbatim %}-->
+
+		</div>
+
+
+
+
 		<div>
 			
 			
