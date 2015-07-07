@@ -187,10 +187,12 @@ def amuse(d, all_nodes, interv_count):
 def create_amuse_list(ordered_list, n):
     
     node_list = [0 for x in range(ordered_list.count())]
-    print node_list
     i = 0
     for node in ordered_list:
-        pdr_val = getattr(node, 'pdr_' + n)
+        # pdr_val = self.__dict__.get(node, 'pdr_' + n)
+        # pdr_val = getattr(node, 'pdr_' + n)
+        # pdr_val = 1
+        pdr_val = 1
         if pdr_val > 0:
             node_list[i] = str(node.name)
             i = i + 1
@@ -231,6 +233,7 @@ def amuse(d, all_nodes, interv_count):
 
         worst = s[0]
         del s[0]
+
 
         print("worst: " + worst)
         # remove worst node from list
