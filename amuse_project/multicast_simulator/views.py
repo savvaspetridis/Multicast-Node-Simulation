@@ -286,7 +286,7 @@ def amuse(d, all_nodes, interv_count):
     print "returned!"
     return ret_slide
 
-'''
+
 # main rate adaption algorithm
 def adapt_rate(lowest_rate, w_min, interv_count):
     rate = lowest_rate
@@ -295,12 +295,16 @@ def adapt_rate(lowest_rate, w_min, interv_count):
     ref_time = interv_count
 
 
+
+
+'''
 # window size determination
 def get_window_size():
 
 # rate decision
 def get_rate(): 
 '''
+
 
 
 # distance formula
