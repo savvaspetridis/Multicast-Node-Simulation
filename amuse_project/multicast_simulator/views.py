@@ -64,7 +64,14 @@ def get_ret_slide(request):
 
         if time_interval == .5:
 
-            all_nodes = Interval_pFive.objects.filter(bit_rate=br)
+            print "here"
+
+            # all_nodes = Interval_pFive.objects.values_list('pdr_' + interv_count, bit_rate=br)
+            # all_nodes = Interval_pFive.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
+            all_nodes = Interval_pFive.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name')
+            print "made it"
+            print all_nodes
+            # all_nodes = Interval_pFive.objects.filter(bit_rate=br)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
             resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br}
@@ -72,7 +79,8 @@ def get_ret_slide(request):
 
         elif time_interval == 1:
 
-            all_nodes = Interval_One.objects.filter(bit_rate=br)
+            # all_nodes = Interval_One.objects.filter(bit_rate=br)
+            all_nodes = Interval_One.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
             resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br}
@@ -80,7 +88,8 @@ def get_ret_slide(request):
 
         else:
 
-            all_nodes = Interval_Two.objects.filter(bit_rate=br)
+            # all_nodes = Interval_Two.objects.filter(bit_rate=br)
+            all_nodes = Interval_Two.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
             response = JsonResponse({'pdr_set': ret_slide, 'feedback_set': fb_nodes, 'bit_rate': br})
@@ -93,11 +102,12 @@ def create_ret_slide(count, bitRate, allNodes):
     ret_slide = [[0 for y in range(20)] for x in range(20)]
 
     for node in allNodes:
-        pdr_val = getattr(node, 'pdr_' + str(count))
+        pdr_val = node[0]
+        # print(pdr_val)
             
         # each node name is formatted as such: '1-1', '1-2', ... 
         # split at '-' to get the x and y coordinates on test bed
-        arr = node.name.split('-')
+        arr = node[1].split('-')
         x = int(arr[0])-1 
         y = int(arr[1])-1
         ret_slide[x][y] = float("{0:.2f}".format(pdr_val * 100)) # insert in master array, format as %
@@ -127,9 +137,12 @@ def k_random(k, all_nodes, interv_count):
     while count < k:
         index = random.randint(0, end)
         rand_node = all_nodes[index]
-        pdr_val = getattr(rand_node, 'pdr_' + num)
+        # pdr_val = getattr(rand_node, 'pdr_' + num)
+        pdr_val = rand_node[0]
+        print "rand pdr val: " + str(pdr_val)
         if pdr_val > 0:
-            arr = rand_node.name.split('-')
+            # arr = rand_node.name.split('-')
+            arr = rand_node[1].split('-')
             x = int(arr[0])-1
             y = int(arr[1])-1
             ret_slide[x][y] = 1
@@ -141,12 +154,14 @@ def k_worst(k, all_nodes, interv_count):
     
     ret_slide = [[0 for y in range(20)] for x in range(20)]
     num = str(interv_count)
-    s = all_nodes.order_by('pdr_' + num)
+    # s = all_nodes.order_by('pdr_' + num)
     count = 0
-    for node in s:
-        pdr_val = getattr(node, 'pdr_' + num)
+    for node in all_nodes:
+        # pdr_val = getattr(node, 'pdr_' + num)
+        pdr_val = node[0]
         if pdr_val > 0:
-            arr = node.name.split('-')
+            # arr = node.name.split('-')
+            arr = node[1].split('-')
             x = int(arr[0])-1
             y = int(arr[1])-1
             ret_slide[x][y] = 1
@@ -190,9 +205,13 @@ def create_amuse_list(ordered_list, n):
     i = 0
     for node in ordered_list:
         # pdr_val = self.__dict__.get(node, 'pdr_' + n)
-        # pdr_val = getattr(node, 'pdr_' + n)
+        pdr_val = getattr(node, 'pdr_' + n)
         # pdr_val = 1
-        pdr_val = 1
+        '''
+        node_list[i] = str(node.name)
+        i = i + 1
+        '''
+
         if pdr_val > 0:
             node_list[i] = str(node.name)
             i = i + 1
@@ -216,23 +235,25 @@ def amuse(d, all_nodes, interv_count):
 
     ret_slide = [[0 for y in range(20)] for x in range(20)]
     num = str(interv_count)
-    s = all_nodes
-    print "oh god"
+    s = list(all_nodes)
 
     # s = s.order_by('pdr_' + num)
+    # s.sort()
 
     print "list ordered"
-    s = create_amuse_list(s, num)
+    # s = create_amuse_list(s, num)
 
     print "list made"
 
     while len(s) != 0:
-        # print('length: ' + str(len(s)))
+        print('length: ' + str(len(s)))
         # get worst node
         # worst = s.pop()
 
-        worst = s[0]
+        worst = s[0][1]
+        print "got worst"
         del s[0]
+        print "deleted worst"
 
 
         print("worst: " + worst)
@@ -250,7 +271,7 @@ def amuse(d, all_nodes, interv_count):
             # print "here"
 
             # get its x and y coordinates
-            node = s[i]
+            node = s[i][1]
             arr = node.split('-')
             x2 = int(arr[0])
             y2 = int(arr[1])
