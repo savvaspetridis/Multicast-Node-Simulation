@@ -50,12 +50,12 @@ class SimulationForm(forms.Form):
 	# for rate adaptation. may change from float or integer fields or vice versa
 	
 
-	H = forms.FloatField(label='H-low Threshold', required=False)
-	Delta = forms.FloatField(label='Delta', required=False)
-	W_min = forms.IntegerField(label='Window minimum', required=False)
-	W_max = forms.IntegerField(label='Window maximum', required=False)
-	time = forms.FloatField(label='Time:', required=False)
-	A_max = forms.IntegerField(label='Maximum abnormal nodes', required=False)
+	H = forms.FloatField(label='H-low Threshold', required=False, widget=forms.NumberInput(attrs={'ng-model' : 'H'}))
+	Delta = forms.FloatField(label='Delta', required=False, widget=forms.NumberInput(attrs={'ng-model' : 'Delta'}))
+	W_min = forms.IntegerField(label='Window minimum', required=False, widget=forms.NumberInput(attrs={'ng-model' : 'W_min'}))
+	W_max = forms.IntegerField(label='Window maximum', required=False, widget=forms.NumberInput(attrs={'ng-model' : 'W_max'}))
+	time = forms.FloatField(label='Time:', required=False, widget=forms.NumberInput(attrs={'ng-model' : 'windowTime'}))
+	A_max = forms.IntegerField(label='Maximum abnormal nodes', required=False, widget=forms.NumberInput(attrs={'ng-model' : 'A_max'}))
 
 
 
