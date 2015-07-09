@@ -24,7 +24,7 @@ class SimulationForm(forms.Form):
 		(2.0, 2.0),
 	)
 
-	updateInterval = forms.TypedChoiceField(coerce=float, empty_value=0.0, label='Update Interval', choices=INTERVALS) # origninal
+	updateInterval = forms.TypedChoiceField(coerce=float, empty_value=0.0, label='Update Interval', choices=INTERVALS, widget=forms.Select(attrs={'ng-model' : 'intervalCount'})) # origninal
 	# updateInterval = forms.ChoiceField(required=False, label='Update Interval', choices=INTERVALS)
 
 	
