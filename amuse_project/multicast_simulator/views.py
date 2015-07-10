@@ -14,13 +14,14 @@ from .forms import *
 import random
 import math
 import json
+import unicodedata
 
 
 def index(request):
 
     # if post request:
     if request.method == 'POST':
-        print "index method"
+        # print "index method"
         form = SimulationForm(request.POST)
 
         # check if the input is valid:
@@ -54,8 +55,8 @@ def get_ret_slide(request):
     if request.method == 'POST':
 
         data = json.loads(request.body)
-        interv_count = int(data[u'count'])
-        print "interv_count: " + str(interv_count)
+        interv_count = int(data[u'count']) 
+        # print "interv_count: " + str(interv_count) 
         time_interval = float(data[u'updateInterval'])
         dist = int(data[u'dist'])
         k = int(data[u'k'])
@@ -64,13 +65,13 @@ def get_ret_slide(request):
 
         if time_interval == .5:
 
-            print "here"
+            # print "here"
 
             # all_nodes = Interval_pFive.objects.values_list('pdr_' + interv_count, bit_rate=br)
             # all_nodes = Interval_pFive.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
             all_nodes = Interval_pFive.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name')
-            print "made it"
-            print all_nodes
+            # print "made it"
+            # print all_nodes
             # all_nodes = Interval_pFive.objects.filter(bit_rate=br)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             fb_nodes = run_feedback_alg(fb_algorithm, interv_count, k, dist, all_nodes)
@@ -97,7 +98,7 @@ def get_ret_slide(request):
             
 def create_ret_slide(count, bitRate, allNodes):
     
-    print "in create_ret_slide method!"
+    # print "in create_ret_slide method!"
     # create list containing six lists, each containing 20 lists with 20 elements each
     ret_slide = [[0 for y in range(20)] for x in range(20)]
 
@@ -139,7 +140,7 @@ def k_random(k, all_nodes, interv_count):
         rand_node = all_nodes[index]
         # pdr_val = getattr(rand_node, 'pdr_' + num)
         pdr_val = rand_node[0]
-        print "rand pdr val: " + str(pdr_val)
+        # print "rand pdr val: " + str(pdr_val)
         if pdr_val > 0:
             # arr = rand_node.name.split('-')
             arr = rand_node[1].split('-')
@@ -237,13 +238,57 @@ def amuse(d, all_nodes, interv_count):
     num = str(interv_count)
     s = list(all_nodes)
 
-    # s = s.order_by('pdr_' + num)
-    # s.sort()
+    # bubble sort implementation
+    count1 = len(s)
+    # print "outside loop" + str(count1)
+    while count1 > 0:
 
-    print "list ordered"
-    # s = create_amuse_list(s, num)
+        count2 = 0
+        # print count2
+        while count2 < len(s)-1:
+            # print "inner loop" + str(count2)
+            if s[count2][0] > s[count2+1][0]:
+                # print "got in if"
+                temp = s[count2]
+                s[count2] = s[count2+1]
+                s[count2+1] = temp
+            count2 = count2 + 1
+            # print len(s)
+        #print count1
+        # print "working??"
 
-    print "list made"
+        count1 = count1 - 1
+        unicodedata.normalize('NFKD', s[count1][1]).encode('ascii', 'ignore')
+
+    count1 = 0
+    count2 = 0
+
+    feedback_set = []
+
+
+    for node in s:
+        # print "in first loop"
+        add = True
+        count = 0
+        for Fbn in feedback_set:
+            # print "in nested loop"
+
+            if calc_dist(node[1], Fbn[1]) < d + 1:
+                add = False
+                # print "asldkfja;lskdfja;lskdfj;alskdfja;slkdfjas;kldf"
+                break
+            count = count + 1
+        if add == True:
+            feedback_set.append(node)
+            name = node[1].split('-')
+            x2 = int(name[0])-1
+            y2 = int(name[1])-1
+            ret_slide[x2][y2] = 1
+        #print ret_slide
+
+
+
+    """
 
     while len(s) != 0:
         print('length: ' + str(len(s)))
@@ -283,7 +328,9 @@ def amuse(d, all_nodes, interv_count):
                 del s[i]
             i = i + 1
         print('length: ' + str(len(s)))
-    print "returned!"
+    """
+    
+    #print ret_slide
     return ret_slide
 
 
@@ -310,3 +357,17 @@ def get_rate():
 # distance formula
 def calc_distance(x1, x2, y1, y2):
     return math.sqrt((math.pow((x1-x2),2) + math.pow((y1-y2),2)))
+
+def calc_dist(name1, name2):
+    arg1 = name1.split('-')
+    x1 = int(arg1[0])
+    y1 = int(arg1[1])
+
+    # print "here"
+
+    arg2 = name2.split('-')
+    x2 = int(arg2[0])
+    y2 = int(arg2[1])
+
+
+    return calc_distance(x1, x2, y1, y2)
