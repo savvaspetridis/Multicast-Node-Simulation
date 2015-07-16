@@ -261,9 +261,23 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		// add bit rate info to graph
 		$scope.times_graph.push($scope.COUNTER * $scope.intervalCount);
+		if($scope.times_graph.length > 10)
+		{
+			$scope.times_graph.shift();
+		}
 		$scope.bit_rates_wrapper[0].push($scope.bit_rate_update);
 
+		if($scope.bit_rates_wrapper[0].length > 10)
+		{
+			$scope.bit_rates_wrapper[0].shift();
+		}
+
 		$scope.throughput_wrapper[0].push($scope.bit_rate_update * $scope.COUNTER * $scope.intervalCount);
+
+		if($scope.throughput_wrapper[0].length >10)
+		{
+			$scope.throughput_wrapper[0].shift();
+		}
 
 		$scope.bit_rate = $scope.bit_rate_update;
 
@@ -349,3 +363,4 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 	//$scope.play();
 }]);
+

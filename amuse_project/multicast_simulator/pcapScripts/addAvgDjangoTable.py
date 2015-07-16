@@ -18,6 +18,8 @@ import psycopg2
 from datetime import datetime
 
 
+
+
 path = sys.argv[1]
 MBPS = sys.argv[2]
 MBPS = sys.argv[2]
@@ -28,13 +30,17 @@ hour = sys.argv[6]
 minute = sys.argv[7]
 second =sys.argv[8]
 offset = sys.argv[9]
+exp_Name = sys.argv[10]
 calcDate = datetime(int(Year), int(Month), int(Day), int(minute), int(second), 0)
 dayOfWeek = calcDate.weekday()
 dayOfYear = calcDate.day
 
+# used to keep track of the last index before the user specified intervals
+#  note: if you want to use intervals other than .5, 1 and 2 you must alter the db formatting section at the end (i.e. add your interval to the list of if clauses for update_time)
+counter = 11
 
-counter = 10
 
+# the intervals specified by the user
 selectIntervals = []
 
 
@@ -43,24 +49,9 @@ while counter < len(sys.argv):
 	selectIntervals.append(float(sys.argv[counter]))
 	counter = counter + 1
 
-# print selectIntervals
 
 
 
-
-# Raphael
-
-# for a database if it's set up
-
-'''
-
-
-
-conn = psycopg2.connect(database="test", user="postgres", password="wko845", host="127.0.0.1", port="5432")
-# print "Opened database successfully"
-cur = conn.cursor()
-
-'''
 
 
 # read the times from timefile
@@ -88,7 +79,7 @@ except:
 	starttime=time.mktime((int(Year), int(Month), int(Day), int(hour), int(minute), int(second), dayOfWeek, dayOfYear, 1))
 endtime = starttime + float(offset) + 0.1
 
-# print str(starttime) + " " + str(endtime)
+
 x_data=[]
 y_data=[]
 totalBytesData=[]
@@ -117,9 +108,14 @@ TimesSent = []
 
 PayloadsSender = []
 
+# store the names of the nodes that are access points
+senders = []
+
+# boolean list of 'recived packets' for the sender (i.e. all true)
+sentData = []
 
 
-
+# parses the pcap files of the sender(s)
 
 for infile in glob.glob( os.path.join(path, '*.pcap') ):
 	
@@ -135,6 +131,9 @@ for infile in glob.glob( os.path.join(path, '*.pcap') ):
 		y=x[1].split('.pcap')
 		x=x[0]
 		y=y[0]
+		nodeKeyTemp=b[1].split('.pcap')
+		nodeKey=nodeKeyTemp[0]
+		senders.append(nodeKey)
 		
 		# Open pcap file
 		pcapFile = open(infile,"rb")
@@ -181,13 +180,7 @@ for infile in glob.glob( os.path.join(path, '*.pcap') ):
 					if (frameCounter == 1):
 						frameCounter = packetCounter
 						initframe=frameCounter
-					'''
-					elif (frameCounter != packetCounter):
-						while (frameCounter != packetCounter):
-						   Missed = Missed + str(frameCounter) + " "
-						   #print Missed
-						   frameCounter = frameCounter + 1
-					'''
+
 					# Save current timestamp value
 					currentTs = ts
 
@@ -226,35 +219,28 @@ for infile in glob.glob( os.path.join(path, '*.pcap') ):
 		# Close pcap file
 		pcapFile.close
 
-#we need to get these right
+
+
+
+		
 
 
 
 
 
-
-# get data
+# Holds lists of boolean values for the packets recieved
 database = []
 
-#toSend= "'INSERT INTO " + str(MBPS) + "mbps (Node, " 
-sentData = []
-sentData.append("1-1")
-'''
+# Holds strings of 1's and zeros corresponding to the vectors in database
+NodeStrings = []
+
+
 count = 0
-while count < TotalCount:
-	toSend += "recieved# " + str(count) + ", "
-	count = count + 1;
-toSend = toSend[:-1] #to remove last comma
-'''
-count = 0
-# toSend += "VALUES (1.1, "
+
 while count < TotalCount:
 	sentData.append(True) 
 	count = count + 1
-# toSend = toSend[:-1] #to remove last comma
-# toSend += ");"
-# curr.execute('toSend') 
-# print(toSend)
+
 
 
 
@@ -276,13 +262,13 @@ DataSent=[]
 TimeSent=[] 
 ThroughputSent=[]
 for infile in glob.glob( os.path.join(path, '*.pcap') ):
-	# print infile
+	
 
-	# list of booleans recieved and not recieved
+	# list of booleans recieved and not recieved for given pcap file
 	got = []
 
-
-
+	# string of recieved and not recieved
+	boolean_string = ""
 	
 	a=[]
 	b=[]
@@ -296,9 +282,7 @@ for infile in glob.glob( os.path.join(path, '*.pcap') ):
 
 	# Raphael
 
-	# This is to store the node number for the database
-
-
+	# This is to store the names of the nodes in database
 
 	nodeKeyTemp=a[1].split('.pcap')
 	nodeKey=nodeKeyTemp[0]
@@ -371,6 +355,8 @@ for infile in glob.glob( os.path.join(path, '*.pcap') ):
 						# Calculate bytes on wire for this frame
 						length = len(buf)
 
+						ThroughputSent.append(buf)
+
 				
 						
 						# Raphael
@@ -432,37 +418,35 @@ for infile in glob.glob( os.path.join(path, '*.pcap') ):
 			
 			count = 1
 			for pack in Node:
-				# toSend += "recieved# " + str(count) + ", "
 				count = count + 1;
-			# toSend = toSend[:-1] #to remove last comma
-			# toSend += "VALUES (" + nodeKey + ", "
+
 			counter = 0
 			sender = 0
-			# print str(len(PayloadsSender))
-			# print str(len(PayloadsReciever))
-			'''
-			if counter == 0 :
-				print PayloadsSender
-				print PayloadsReciever
-			'''
+
 			while counter < len(PayloadsSender) :
 				if(sender == len(PayloadsReciever)):
 					break
 				if(PayloadsSender[counter] == PayloadsReciever[sender]):
 					got.append(True) 
+					boolean_string += "1"
 					sender = sender + 1
 					counter = counter + 1
 				else :
 					got.append(False)
+					boolean_string += "0"
 					counter = counter + 1
 			database.append(got)
+			NodeStrings.append(boolean_string)
 			pcapFile.close
-			#curr.execute('toSend')
+			
+
+
 
 
 # list of intervals 
-
 doubleTimeCount = []
+
+
 for interval in selectIntervals:
 	counters = 0
 	stopPac = []
@@ -485,15 +469,14 @@ for interval in selectIntervals:
 
 
 doubleTimeCounter = 0
+# triple array with pdr values 
 avgAllIntervals = []
+
 for inter in selectIntervals:
 	tSub1 = doubleTimeCount[doubleTimeCounter]
 	avgValsTimeInterval =[]
 	isSender = 0
 	for singleNode in database:
-		
-		
-		
 		#toSend = "INSERT INTO " + str(MBPS) + str(inter) + " VALUES ("
 		avgValsSingleNode = []
 		counter = 0
@@ -524,20 +507,46 @@ for inter in selectIntervals:
 	avgAllIntervals.append(avgValsTimeInterval)
 	doubleTimeCounter = doubleTimeCounter + 1
 
-'''
-# create interval tables
-for inter in selectIntervals:
-	tableQuery = "CREATE TABLE Interval" + str(MBPS) + str(int(inter*1000)) + " ("
-	count = 0
-	while count < len(avgAllIntervals[0]):
-		tableQuery += "NODE" + str(count) + " REAL, "
-		# tableArray.append(str(count))
-		count = count + 1;
-	tableQuery = tableQuery[:-2] #to remove last comma	
-	tableQuery += ");"
-	print(tableQuery)
 
-'''
+# print queries for the access point(s)
+doubleTimeCounter = 0
+for access_point in senders:
+	ap_wrapper = access_point.replace("-", "_")
+	sent_list = "node_" + str(MBPS) + "_" + ap_wrapper + "_" + exp_Name + " = Packet_List(name = \"" + access_point + "\", bit_rate = " + str(MBPS) + ", packets = \"\", exp_name = \"" + exp_Name + "\")\nnode_" + str(MBPS) + "_" + ap_wrapper + "_" + exp_Name + ".save()"
+	print sent_list
+
+	index = 0
+	
+	for update_time in selectIntervals:
+		time = int(8.0 / float(update_time))
+		new_ud_time = ""
+		if update_time == 0.5:
+			new_ud_time = "_pFive"
+		if update_time == 1.0:
+			new_ud_time = "_One"
+		if update_time == 2.0:
+			new_ud_time = "_Two"
+		ap_query = "entry_ap" + str(MBPS) + str(index) + " = Interval" + new_ud_time + "(name = \"" + access_point + "\", bit_rate = " + str(MBPS) + ", packets_recieved = node_" + str(MBPS) + "_" + str(ap_wrapper) + "_" + str(exp_Name) +", "
+		count_ap = 0
+		while count_ap < time :
+			ap_query += "pdr_" + str(count_ap+1) + " = 1, pdr_" + str(count_ap + 1) + "_max_index = " + str(doubleTimeCount[index][count_ap]) + ", "
+			count_ap = count_ap + 1
+		ap_query += "exp_name = \"" + exp_Name + "\", is_access_point = True)\nentry_ap" + str(MBPS) + str(index) + ".save()"
+		print ap_query
+		index = index + 1
+	doubleTimeCounter = doubleTimeCounter + 1
+
+
+
+# create Packet_Lists models
+val_list_entry_count = 0
+for val_string in NodeStrings:
+	val_list_name = database[val_list_entry_count][0]
+	val_list_name_wrapper = val_list_name.replace("-", "_")
+	# exp_name_wrapper = exp_Name.replace(" ", "_")
+	node_Entry = "node_" + str(MBPS) + "_" + val_list_name_wrapper + "_" + exp_Name + " = Packet_List(name = \"" + val_list_name + "\", bit_rate = " + str(MBPS) + ", packets = \""+ val_string + "\", exp_name = \"" + exp_Name + "\")\nnode_" + str(MBPS) + "_" + val_list_name_wrapper + "_" + exp_Name + ".save()"
+	print node_Entry
+	val_list_entry_count = val_list_entry_count + 1
 
 # create table queries for all intervals
 doubleTimeCounter = 0
@@ -551,13 +560,18 @@ for singleInterval in avgAllIntervals:
 			update_time = "_One"
 		if update_time == "2.0":
 			update_time = "_Two"
-		toSend = "entry" + str(MBPS)+ str(finalCounter) + " = Interval" + update_time +"(name = \"" + database[finalCounter][0] + "\", bit_rate = " + str(MBPS) + ", "
+		val_list_name = database[finalCounter][0]
+		val_list_name_wrapper = val_list_name.replace("-", "_")
+		# exp_name_wrapper = exp_Name.replace(" ", "_")
+		toSend = "entry" + str(MBPS)+ str(finalCounter) + " = Interval" + update_time +"(name = \"" + val_list_name + "\", bit_rate = " + str(MBPS) + ", packets_recieved = " + "node_" + str(MBPS) + "_" + val_list_name_wrapper + "_" + exp_Name + ", "
 		count = 1
 		for average in singleInterval[finalCounter]:
 			toSend += "pdr_" + str(count) + " = %f, " % average
+			toSend += "pdr_" + str(count) + "_max_index = " + str(doubleTimeCount[doubleTimeCounter][count-1]) + ", "
 			count = count + 1
-		toSend = toSend[:-2]
-		toSend += ")\nentry" + str(MBPS)+ str(finalCounter) + ".save()"
+		toSend += "exp_name = \"" + exp_Name + "\", "
+		# toSend = toSend[:-2]
+		toSend += "is_access_point = False)\nentry" + str(MBPS) +  str(finalCounter) + ".save()"
 		
 		finalCounter = finalCounter + 1
 		print toSend
@@ -566,10 +580,6 @@ for singleInterval in avgAllIntervals:
 
 
 
-'''
-conn.commit()
-conn.close
-'''
 
 
 			

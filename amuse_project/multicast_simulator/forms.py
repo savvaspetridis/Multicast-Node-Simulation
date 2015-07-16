@@ -15,7 +15,7 @@ class SimulationForm(forms.Form):
 	)
 
 	# bitRate = forms.TypedChoiceField(coerce=int, empty_value=0, label='Bit Rate', choices=BITRATES) #original
-	bitRate = forms.ChoiceField(required=False, label='Bit Rate', choices=BITRATES, widget=forms.Select(attrs={'ng-show' : 'showBitRate', 'ng-model' : 'bit_rate_update'}))
+	bitRate = forms.ChoiceField(required=False, label='Bit Rate', choices=BITRATES, widget=forms.Select(attrs={'ng-model' : 'bit_rate_update'}))
 
 	
 	INTERVALS = (

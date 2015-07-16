@@ -97,7 +97,7 @@ they will affect how django parses the code.
 	<!--{% endverbatim %} -->
 
 	<form action="." method="post"> {% csrf_token %}
-		<div class="fieldWrapper" ng-show="showBitRate">
+		<div class="fieldWrapper">
 			<label for="{{ form.bitRate.id_for_label }}" >Bit Rate:</label>
 			{{ form.bitRate }}
 		</div>
@@ -249,7 +249,7 @@ they will affect how django parses the code.
 
 	to bypass Django statics, uncomment this script tag and comment out the one above-->
 
-	<script src="https://rawgit.com/savvaspetridis/Multicast-Node-Simulation/master/amuse_project/multicast_simulator/templates/multicast_simulator/tableController.js"> </script>
+	<!--<script src="https://rawgit.com/savvaspetridis/Multicast-Node-Simulation/master/amuse_project/multicast_simulator/templates/multicast_simulator/tableController.js"> </script>-->
 
 
 <!--<script>
@@ -516,9 +516,23 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		// add bit rate info to graph
 		$scope.times_graph.push($scope.COUNTER * $scope.intervalCount);
+		if($scope.times_graph.length > 10)
+		{
+			$scope.times_graph.shift();
+		}
 		$scope.bit_rates_wrapper[0].push($scope.bit_rate_update);
 
+		if($scope.bit_rates_wrapper[0].length > 10)
+		{
+			$scope.bit_rates_wrapper[0].shift();
+		}
+
 		$scope.throughput_wrapper[0].push($scope.bit_rate_update * $scope.COUNTER * $scope.intervalCount);
+
+		if($scope.throughput_wrapper[0].length >10)
+		{
+			$scope.throughput_wrapper[0].shift();
+		}
 
 		$scope.bit_rate = $scope.bit_rate_update;
 
