@@ -29,6 +29,22 @@ def index(request):
     if request.method == 'POST':
         form = SimulationForm(request.POST)
 
+        global A_t_list
+        global M_t_list
+        global curr_interval
+        global curr_rate
+        global window
+        global change_time
+        global ref_time
+        
+        A_t_list = []
+        M_t_list = []
+        curr_interval = -1
+        curr_rate = 6
+        window = 0
+        change_time = 0  
+        ref_time = 0
+
         # check if the input is valid:
         if form.is_valid(): 
 
@@ -192,8 +208,6 @@ def get_ret_slide(request):
                 fb_slide = [[0 for z in range(20)] for y in range(20)]
                 resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
                 return JsonResponse(resp_data)
-    else:
-
             
 def create_ret_slide(count, bitRate, allNodes):
     
