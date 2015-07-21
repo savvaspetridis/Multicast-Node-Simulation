@@ -25,25 +25,11 @@ ref_time = 0
 
 def index(request):
 
+    reset()
+
     # if post request:
     if request.method == 'POST':
         form = SimulationForm(request.POST)
-
-        global A_t_list
-        global M_t_list
-        global curr_interval
-        global curr_rate
-        global window
-        global change_time
-        global ref_time
-        
-        A_t_list = []
-        M_t_list = []
-        curr_interval = -1
-        curr_rate = 6
-        window = 0
-        change_time = 0  
-        ref_time = 0
 
         # check if the input is valid:
         if form.is_valid(): 
@@ -66,22 +52,6 @@ def index(request):
                 
             return render(request, 'multicast_simulator/index.html', c) 
     else:
-        
-        global A_t_list
-        global M_t_list
-        global curr_interval
-        global curr_rate
-        global window
-        global change_time
-        global ref_time
-        
-        A_t_list = []
-        M_t_list = []
-        curr_interval = -1
-        curr_rate = 6
-        window = 0
-        change_time = 0  
-        ref_time = 0
         
         form = SimulationForm()
 
@@ -524,6 +494,24 @@ def calc_A_max(all_nodes, perc):
             active_node_count = active_node_count + 1
     A_max = round(active_node_count * perc)
     return A_max
+
+def reset():
+    global A_t_list
+    global M_t_list
+    global curr_interval
+    global curr_rate
+    global window
+    global change_time
+    global ref_time
+    
+    A_t_list = []
+    M_t_list = []
+    curr_interval = -1
+    curr_rate = 6
+    window = 0
+    change_time = 0  
+    ref_time = 0
+
 
 # distance formula
 def calc_distance(x1, x2, y1, y2):
