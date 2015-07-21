@@ -76,12 +76,8 @@ def get_ret_slide(request):
     
         if time_interval == .5:
 
-            all_nodes = Interval_pFive.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name', 'is_access_point').order_by('pdr_' + str(interv_count))
-            print all_nodes
-            node = Interval_pFive.objects.filter(bit_rate=br).get(name='1-10')
-            throughput = getattr(node, 'pdr_' + str(interv_count) + '_max_index')
-
-            A_max = calc_A_max(all_nodes, user_A_max)
+            all_nodes = Interval_pFive.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
+            A_max = calc_A_max(all_nodes)
             print "A_max: " + str(A_max)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             
@@ -101,7 +97,7 @@ def get_ret_slide(request):
                 new_rate = adapt_rate(h_low, delta, w_min, w_max, fb_data, threshold_time, A_max)
 
                 print "new_rate: " + str(new_rate)
-                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
+                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': new_rate}
                 # send to front-end
                 return JsonResponse(resp_data)
 
@@ -110,15 +106,13 @@ def get_ret_slide(request):
                 
                 # list of 0's 
                 fb_slide = [[0 for z in range(20)] for y in range(20)]
-                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
+                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br}
                 return JsonResponse(resp_data)
 
         elif time_interval == 1:
 
             all_nodes = Interval_One.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
-            node = Interval_pFive.objects.filter(bit_rate=br).get(name='1-10')
-            throughput = getattr(node, 'pdr_' + str(interv_count) + '_max_index')
-            A_max = calc_A_max(all_nodes, user_A_max)
+            A_max = calc_A_max(all_nodes)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             
             if fb_algorithm != 'NONE':
@@ -132,23 +126,21 @@ def get_ret_slide(request):
                 new_rate = adapt_rate(h_low, delta, w_min, w_max, fb_data, threshold_time, A_max)
 
                 print "new_rate: " + str(new_rate)
-                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
+                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': new_rate}
                 return JsonResponse(resp_data)
 
             else: 
                 
                 # list of 0's 
                 fb_slide = [[0 for z in range(20)] for y in range(20)]
-                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
+                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br}
                 return JsonResponse(resp_data)
 
         # time_interval == 2:
         else:
 
             all_nodes = Interval_Two.objects.filter(bit_rate=br).values_list('pdr_' + str(interv_count), 'name').order_by('pdr_' + str(interv_count))
-            node = Interval_pFive.objects.filter(bit_rate=br).get(name='1-10')
-            throughput = getattr(node, 'pdr_' + str(interv_count) + '_max_index')
-            A_max = calc_A_max(all_nodes, user_A_max)
+            A_max = calc_A_max(all_nodes)
             ret_slide = create_ret_slide(interv_count, br, all_nodes)
             
             if fb_algorithm != 'NONE':
@@ -162,14 +154,14 @@ def get_ret_slide(request):
                 new_rate = adapt_rate(h_low, delta, w_min, w_max, fb_data, threshold_time, A_max)
 
                 print "new_rate: " + str(new_rate)
-                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
+                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': new_rate}
                 return JsonResponse(resp_data)
 
             else: 
                 
                 # list of 0's 
                 fb_slide = [[0 for z in range(20)] for y in range(20)]
-                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br, 'throughput': throughput}
+                resp_data = {'pdr_set': ret_slide, 'feedback_set': fb_slide, 'bit_rate': br}
                 return JsonResponse(resp_data)
             
 def create_ret_slide(count, bitRate, allNodes):
@@ -465,21 +457,15 @@ def get_window_size(action, window, w_max, threshold_time, w_min):
     return window
 
 # gets A_max value
-def calc_A_max(all_nodes, perc):
-    perc = perc/100.00
-    print "perc: " + str(perc)
+def calc_A_max(all_nodes):
     active_node_count = 0
     for node in all_nodes:
         pdr_val = node[0]
         if pdr_val > 0:
             active_node_count = active_node_count + 1
-    A_max = round(active_node_count * perc)
+    # A_max should be 5% of the total active node count
+    A_max = round(active_node_count * .05)
     return A_max
-
-'''
-def find_access_point():
-'''
-
 
 # distance formula
 def calc_distance(x1, x2, y1, y2):
