@@ -1,9 +1,11 @@
+
 var app = angular.module('app', ['chart.js'] ).config(function($httpProvider) {
 $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 });
 app.controller('theController', ['$scope', '$interval', '$http', '$templateCache', function($scope, $interval, $http, $templateCache)
 {
+	
 
 	
 
@@ -44,7 +46,12 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.W_min = 4;
 	$scope.W_max = 16;
 	$scope.windowTime = 20;
-	$scope.A_max = 10;
+	$scope.A_max = 5;
+
+	// this is for the throughput calculation
+	$scope.throughput = 0;
+	$scope.throughput_new =0;
+	$scope.throughput_org = 0;
 
 
 
@@ -68,7 +75,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.showDistance = false;
 	$scope.algorithms = ['NONE', 'WORST', 'RAND', 'AMUSE'];
 	$scope.k_nodes = 6;
-	$scope.distance = 1;
+	$scope.distance = 6;
 
 
 
@@ -76,6 +83,10 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.my ={option : 'NONE'};
 	//$scope.method = 'JSONP';
 	$scope.url = '/update';
+
+	$scope.options = {
+			animation : false,
+	}
 
 
 	var promise;
@@ -88,6 +99,10 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.showUpdate = false;
 
 		$scope.run_calculations();
+
+		
+
+
 
 		promise = $interval($scope.run_calculations, $scope.intervalCount * 1000);
 	};
@@ -152,7 +167,16 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			{
 				var nodeColorBooleans = [];
 
-				if($scope.feedbackNodes[j][l] == 1)
+				if($scope.feedbackNodes[j][l] == 1) // green dotted line 
+				{
+					nodeColorBooleans.push(true);
+
+				}
+				else
+				{
+					nodeColorBooleans.push(false);
+				}
+				if($scope.feedbackNodes[j][l] == -1) //Fuscia 
 				{
 					nodeColorBooleans.push(true);
 
@@ -162,8 +186,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					nodeColorBooleans.push(false);
 				}
 
-				
-				if (currVals[j][l] == 0.0)
+				if (currVals[j][l] <= 50.0 && currVals[j][l] > 25.0) // orange
 				{
 					nodeColorBooleans.push(true);
 				}
@@ -172,7 +195,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					nodeColorBooleans.push(false);
 				}
 
-				if (currVals[j][l] <= 50.0 && currVals[j][l] > 25.0)
+				if (currVals[j][l] <= 75.0 && currVals[j][l] > 50.0) // yellow
 				{
 					nodeColorBooleans.push(true);
 				}
@@ -181,7 +204,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					nodeColorBooleans.push(false);
 				}
 
-				if (currVals[j][l] <= 75.0 && currVals[j][l] > 50.0)
+				if (currVals[j][l] > 75.0) // green
 				{
 					nodeColorBooleans.push(true);
 				}
@@ -190,23 +213,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					nodeColorBooleans.push(false);
 				}
 
-				if (currVals[j][l] > 75.0)
-				{
-					nodeColorBooleans.push(true);
-				}
-				else
-				{
-					nodeColorBooleans.push(false);
-				}
-				if (currVals[j][l] < 0)
-				{
-					nodeColorBooleans.push(true);
-				}
-				else
-				{
-					nodeColorBooleans.push(false);
-				}
-				if(currVals[j][l] == -100.0) // or if(currVals[j][l] == someValue)
+				if(currVals[j][l] == -100.0) // black
 				{
 					nodeColorBooleans.push(true);
 					$scope.avgCheck = $scope.avgCheck + 1;
@@ -215,7 +222,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 				{
 					nodeColorBooleans.push(false);
 				}
-				if(currVals[j][l] <= 25.0 && currVals[j][l] > 0.0) // or if(currVals[j][l] == someValue)
+				if (currVals[j][l] == 0.0) // grey
 				{
 					nodeColorBooleans.push(true);
 				}
@@ -223,6 +230,15 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 				{
 					nodeColorBooleans.push(false);
 				}
+				if(currVals[j][l] <= 25.0 && currVals[j][l] > 0.0) // red
+				{
+					nodeColorBooleans.push(true);
+				}
+				else
+				{
+					nodeColorBooleans.push(false);
+				}
+
 
 
 				// add any new if-else conditionals (as described above) here
@@ -261,20 +277,29 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		// add bit rate info to graph
 		$scope.times_graph.push($scope.COUNTER * $scope.intervalCount);
-		if($scope.times_graph.length > 10)
+		if($scope.times_graph.length > 120)
 		{
 			$scope.times_graph.shift();
 		}
 		$scope.bit_rates_wrapper[0].push($scope.bit_rate_update);
 
-		if($scope.bit_rates_wrapper[0].length > 10)
+		if($scope.bit_rates_wrapper[0].length >120)
 		{
 			$scope.bit_rates_wrapper[0].shift();
 		}
 
-		$scope.throughput_wrapper[0].push($scope.bit_rate_update * $scope.COUNTER * $scope.intervalCount);
+		if($scope.throughput_new <= $scope.throughput_org)
+		{
+			$scope.throughput_org = 0;
+		}
 
-		if($scope.throughput_wrapper[0].length >10)
+		$scope.throughput += $scope.throughput_new - $scope.throughput_org;
+
+		$scope.throughput_org = $scope.throughput_new;
+
+		$scope.throughput_wrapper[0].push($scope.throughput);
+
+		if($scope.throughput_wrapper[0].length >120)
 		{
 			$scope.throughput_wrapper[0].shift();
 		}
@@ -285,6 +310,9 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		$scope.Interval = $scope.intervalBuffer;
 		$scope.showGraphs = true;
+
+
+
 	}
 			
 	$scope.stop = function(){
@@ -348,6 +376,8 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			//test this after you know interval works
 			$scope.feedbackNodes = data.feedback_set;
 			$scope.bit_rate_update = data.bit_rate;
+			$scope.throughput_new = data.throughput;
+
 		}).
 		error(function(data, status)
 		{
