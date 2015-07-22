@@ -143,18 +143,18 @@ they will affect how django parses the code.
 
 		<h2>{{(COUNTER * intervalCount)}} seconds</h2>
 
-		<table ng-show="showGraphs">
-			<tr>
-				<td>
-					Maximum Node: {{maxNode}} 
+		<table ng-show="showGraphs" width="50%">
+			<tr >
+				<td width="15%" position="absolute">
+					Maximum PDR: {{maxNode}} 
 				</td>
-				<td>
-					Minimum Node: {{minNode}}
+				<td width="15%">
+					Minimum PDR: {{minNode}}
 				</td>
-				<td>
-					Average Node: {{avgNode}} 
+				<td width="13%">
+					Average PDR: {{avgNode}} 
 				</td>
-				<td>
+				<td width="8%">
 					Bit-rate: {{bit_rate_show}} 
 				</td>
 			</tr>
@@ -268,7 +268,7 @@ they will affect how django parses the code.
 
 	to bypass Django statics, uncomment this script tag and comment out the one above-->
 
-	<script src="https://rawgit.com/savvaspetridis/Multicast-Node-Simulation/master/amuse_project/multicast_simulator/templates/multicast_simulator/tableController.js"> </script>
+	<!--<script src="https://rawgit.com/savvaspetridis/Multicast-Node-Simulation/master/amuse_project/multicast_simulator/templates/multicast_simulator/tableController.js"> </script>-->
 
 
 <!--<script>
@@ -552,7 +552,11 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.i = $scope.i+ 1;
 		$scope.totalTime = $scope.totalTime + 1;
 
-		$scope.throughput = $scope.throughput_new - $scope.throughput_org;
+		if($scope.throughput_new != $scope.throughput_org)
+		{
+
+			$scope.throughput = $scope.throughput_new - $scope.throughput_org;
+		}
 
 		if($scope.throughput_new < $scope.throughput_org)
 		{
@@ -595,6 +599,9 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.bit_rate = $scope.bit_rate_update;
 
 		$scope.avgNode = $scope.avgNode / $scope.avgCheck;
+		$scope.avgNode = $scope.avgNode.toFixed(2);
+		$scope.maxNode = $scope.maxNode.toFixed(2);
+		$scope.minNode = $scope.minNode.toFixed(2);
 
 		$scope.Interval = $scope.intervalBuffer;
 		$scope.showGraphs = true;

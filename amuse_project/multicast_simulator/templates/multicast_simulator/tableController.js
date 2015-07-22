@@ -277,7 +277,11 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.i = $scope.i+ 1;
 		$scope.totalTime = $scope.totalTime + 1;
 
-		$scope.throughput = $scope.throughput_new - $scope.throughput_org;
+		if($scope.throughput_new != $scope.throughput_org)
+		{
+
+			$scope.throughput = $scope.throughput_new - $scope.throughput_org;
+		}
 
 		if($scope.throughput_new < $scope.throughput_org)
 		{
@@ -320,6 +324,9 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.bit_rate = $scope.bit_rate_update;
 
 		$scope.avgNode = $scope.avgNode / $scope.avgCheck;
+		$scope.avgNode = $scope.avgNode.toFixed(2);
+		$scope.maxNode = $scope.maxNode.toFixed(2);
+		$scope.minNode = $scope.minNode.toFixed(2);
 
 		$scope.Interval = $scope.intervalBuffer;
 		$scope.showGraphs = true;
