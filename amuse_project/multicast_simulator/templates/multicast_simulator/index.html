@@ -71,7 +71,7 @@ they will affect how django parses the code.
 	}
 	.accessPoint
 	{
-		background-color: Fuchsia;
+		background-color: LightBlue;
 	}
 
 	</style>
@@ -80,7 +80,7 @@ they will affect how django parses the code.
 	<!--these scripts import angular and raphael js-->
 	<script src="http://code.angularjs.org/1.2.2/angular.min.js"> </script>
 	<script src="https://rawgit.com/nnnick/Chart.js/master/Chart.min.js"></script>
-	<script src="https://rawgit.com/jtblin/angular-chart.js/master/dist/angular-chart.js"></script>
+	<script src="https://rawgit.com/savvaspetridis/Multicast-Node-Simulation/master/amuse_project/multicast_simulator/templates/multicast_simulator/angular-chart.js"></script>
 	
 	<!--<script src="https://code.angularjs.org/X.Y.Z/angular-route.js"> </script>-->
 
@@ -100,7 +100,7 @@ they will affect how django parses the code.
 
 	<!--{% endverbatim %} -->
 
-	<form action="." method="post"> {% csrf_token %}
+	<form action="." method="post" align = "center"> {% csrf_token %}
 		<div class="fieldWrapper">
 			<label for="{{ form.bitRate.id_for_label }}" >Bit Rate:</label>
 			{{ form.bitRate }}
@@ -124,6 +124,7 @@ they will affect how django parses the code.
 			{{ form.Delta}}
 			<label for="{{ form.fbNodeAlg.id_for_label }}">Window minimum</label>
 			{{ form.W_min}}
+			<br/>
 			<label for="{{ form.fbNodeAlg.id_for_label }}">Window maximum</label>
 			{{ form.W_max}}
 			<label for="{{ form.fbNodeAlg.id_for_label }}">Time</label>
@@ -136,7 +137,7 @@ they will affect how django parses the code.
 
 	<!-- {% verbatim %} -->
 	
-	<br />
+
 	
 	<b>
 
@@ -148,86 +149,100 @@ they will affect how django parses the code.
 					Maximum Node: {{maxNode}} 
 				</td>
 				<td>
-					Minimum Node: {{minNode}} 
+					Minimum Node: {{minNode}}
 				</td>
 				<td>
 					Average Node: {{avgNode}} 
 				</td>
+				<td>
+					Bit-rate: {{bit_rate_show}} 
+				</td>
 			</tr>
 		</table>
+
+
+		<table width = "100%" height="75" ng-show="showGraphs">
+			<tr height="30">
+				<td width = "50%" >
+							<div ng-show="showGraphs">
 		
+								<canvas id="line" height ="50" class="chart chart-line ng-scope" data="bit_rates_wrapper" labels="times_graph" legend="true" series="series_bit_rate" data-chartjs-animationSteps="1">
+								</canvas>
 
+								
+								
+
+							</div>
+				</td>
+				<td width= "50%">
+							<div ng-show="showGraphs">
 		
-		<table class="fixed" width = "75%" >
-			
+								<canvas id="line" height="50" class="chart chart-line ng-scope" data="throughput_wrapper" labels="times_graph" legend="true" series="series_throughput" data-chartjs-bezier-curve="false">
+								</canvas>
 
-			<th>
-				<!--
+								
+								
 
-				this ng-repeat iterates through the array of areas returned by django (lists of pdr values for each area)
-				to find the area indexes (eg. 1-'', 2-'', 3-''...20-'') 				
-				-->
-				<td ng-repeat="area in Interval" width="4.85%">{{$index+1}}</td>
-
-			</th>
-
-			
-			<!--
+							</div>
+				</td>
+			</tr>
+			<tr>
 				
-				This ng-repeat similarly loops through all the areas in the interval
-
-			-->
-			<tbody ng-repeat="area in Interval">
-				<tr class="nodeRow">
-					<!--gets the individual node numbers within the interval (the horizontal header on the table)-->
-					<td>
-						{{$index+1}}
-					</td>
-					<!--
-
-						this tag both prints the node value in the box and determines the boxes color
-
-						to add another color to the interval,  append the current string inside the {} in ng-class tag by:
-						
-						", 'x' : classSelectors[$parent.$index][$index][y]"
-
-						where x is the color you want to add and y is the highest 'y' value in the expression thus far incremented by 1
-
-						to finish adding a color see the comments inside the angular controller
-
-					-->
-					<td ng-repeat= "node in area track by $index" ng-class = "{'feedback' : classSelectors[$parent.$index][$index][0], 'accessPoint' : classSelectors[$parent.$index][$index][1], 'orange' : classSelectors[$parent.$index][$index][2], 'yellow' : classSelectors[$parent.$index][$index][3], 'green' : classSelectors[$parent.$index][$index][4], 'black' : classSelectors[$parent.$index][$index][5], 'grey' : classSelectors[$parent.$index][$index][6], 'red' : classSelectors[$parent.$index][$index][7] }">
-						{{node}}
-						<!-- {% endverbatim %}-->
-					</td>
-
-				</tr> 
-			</tbody>
+				<td width = "75%" align="center" colspan="2">
+							<table class="fixed" width = "75%" >
 			
-		
+
+									<th>
+										<!--
+
+										this ng-repeat iterates through the array of areas returned by django (lists of pdr values for each area)
+										to find the area indexes (eg. 1-'', 2-'', 3-''...20-'') 				
+										-->
+										<td ng-repeat="area in Interval" width="4.85%">{{$index+1}}</td>
+
+									</th>
+
+									
+									<!--
+										
+										This ng-repeat similarly loops through all the areas in the interval
+
+									-->
+									<tbody ng-repeat="area in Interval">
+										<tr class="nodeRow">
+											<!--gets the individual node numbers within the interval (the horizontal header on the table)-->
+											<td>
+												{{$index+1}}
+											</td>
+											<!--
+
+												this tag both prints the node value in the box and determines the boxes color
+
+												to add another color to the interval,  append the current string inside the {} in ng-class tag by:
+												
+												", 'x' : classSelectors[$parent.$index][$index][y]"
+
+												where x is the color you want to add and y is the highest 'y' value in the expression thus far incremented by 1
+
+												to finish adding a color see the comments inside the angular controller
+
+											-->
+											<td ng-repeat= "node in area track by $index" ng-class = "{'feedback' : classSelectors[$parent.$index][$index][0], 'accessPoint' : classSelectors[$parent.$index][$index][1], 'orange' : classSelectors[$parent.$index][$index][2], 'yellow' : classSelectors[$parent.$index][$index][3], 'green' : classSelectors[$parent.$index][$index][4], 'black' : classSelectors[$parent.$index][$index][5], 'grey' : classSelectors[$parent.$index][$index][6], 'red' : classSelectors[$parent.$index][$index][7] }">
+												{{node}}
+												<!-- {% endverbatim %}-->
+											</td>
+
+										</tr> 
+									</tbody>
+									
+								
+								</table>
+
+				</td>
+
+				
+			</tr>
 		</table>
-
-		<div ng-show="showGraphs">
-		
-			<canvas id="line" width='2400' height='400' class="chart chart-line ng-scope" data="bit_rates_wrapper" labels="times_graph" legend="true" series="series_bit_rate" data-chartjs-animationSteps="1">
-			</canvas>
-
-			
-			
-
-		</div>
-
-		<div ng-show="showGraphs">
-		
-			<canvas id="line" width='2400' height='400' class="chart chart-line ng-scope" data="throughput_wrapper" labels="times_graph" legend="true" series="series_throughput" data-chartjs-bezier-curve="false">
-			</canvas>
-
-			
-			
-
-		</div>
-
-
 
 
 		<div>
@@ -289,7 +304,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.throughput_wrapper = [];
 	$scope.throughput_graph = [];
 	$scope.throughput_wrapper.push($scope.throughput_graph);
-	$scope.series_throughput = ['throughput (megabits) vs. time (seconds)',];
+	$scope.series_throughput = ['throughput (bits per second) vs. time (seconds)',];
 
 	$scope.showGraphs = false;
 
@@ -305,7 +320,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.W_min = 4;
 	$scope.W_max = 16;
 	$scope.windowTime = 20;
-	$scope.A_max = 5;
+	$scope.A_max = 4;
 
 	// this is for the throughput calculation
 	$scope.throughput = 0;
@@ -359,6 +374,10 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		$scope.run_calculations();
 
+		$scope.Interval = $scope.intervalBuffer;
+
+
+
 		
 
 
@@ -368,10 +387,15 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 	$scope.run_calculations = function()
 	{
-		$scope.fetch();
 
 		$scope.numSlides = (8.0 / $scope.intervalCount);
-		
+		if($scope.i == $scope.numSlides + 1 || $scope.bit_rate != $scope.bit_rate_update)
+		{
+			$scope.i = 1;
+			
+		}
+
+		$scope.fetch();
 
 
 		// for min max avg node statistics
@@ -380,7 +404,6 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.avgNode = 0.0;
 
 
-		//$scope.Interval; // set the interval equal to the ith index in the dataDump variable
 
 		
 		var currVals = $scope.intervalBuffer;
@@ -426,7 +449,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			{
 				var nodeColorBooleans = [];
 
-				if($scope.feedbackNodes[j][l] == 1) // green dotted line 
+				if($scope.feedbackNodes[j][l] > 0) // green dotted line 
 				{
 					nodeColorBooleans.push(true);
 
@@ -435,7 +458,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 				{
 					nodeColorBooleans.push(false);
 				}
-				if($scope.feedbackNodes[j][l] == -1) //Fuscia 
+				if($scope.feedbackNodes[j][l] < 0) // Light blue
 				{
 					nodeColorBooleans.push(true);
 
@@ -523,45 +546,51 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			intervalColors.push(areaColors);
 		}
 		$scope.classSelectors = intervalColors;	
+
+
 		
 		$scope.i = $scope.i+ 1;
 		$scope.totalTime = $scope.totalTime + 1;
 
-		
-		if($scope.i == $scope.numSlides +1 || $scope.bit_rate != $scope.bit_rate_update)
+		$scope.throughput = $scope.throughput_new - $scope.throughput_org;
+
+		if($scope.throughput_new < $scope.throughput_org)
 		{
-			$scope.i = 1;
+			$scope.throughput = $scope.throughput_new;
 		}
+
+
+		$scope.throughput_org = $scope.throughput_new;
+
+		
+
 
 
 		// add bit rate info to graph
 		$scope.times_graph.push($scope.COUNTER * $scope.intervalCount);
-		if($scope.times_graph.length > 120)
+		if($scope.times_graph.length > 30)
 		{
 			$scope.times_graph.shift();
 		}
 		$scope.bit_rates_wrapper[0].push($scope.bit_rate_update);
 
-		if($scope.bit_rates_wrapper[0].length >120)
+		if($scope.bit_rates_wrapper[0].length > 30)
 		{
 			$scope.bit_rates_wrapper[0].shift();
 		}
 
-		if($scope.throughput_new <= $scope.throughput_org)
-		{
-			$scope.throughput_org = 0;
-		}
 
-		$scope.throughput += $scope.throughput_new - $scope.throughput_org;
 
-		$scope.throughput_org = $scope.throughput_new;
 
-		$scope.throughput_wrapper[0].push($scope.throughput);
 
-		if($scope.throughput_wrapper[0].length >120)
+		$scope.throughput_wrapper[0].push($scope.throughput * 1440 * 8 / $scope.intervalCount);
+
+		if($scope.throughput_wrapper[0].length > 30)
 		{
 			$scope.throughput_wrapper[0].shift();
 		}
+
+		$scope.bit_rate_show = $scope.bit_rate;
 
 		$scope.bit_rate = $scope.bit_rate_update;
 
@@ -569,6 +598,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		$scope.Interval = $scope.intervalBuffer;
 		$scope.showGraphs = true;
+
 
 
 
@@ -637,15 +667,17 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			$scope.bit_rate_update = data.bit_rate;
 			$scope.throughput_new = data.throughput;
 
+
 		}).
 		error(function(data, status)
 		{
 			$scope.Interval = [0,0, 0];
 			$scope.feedbackNode = [];
-			console.log("here");
 
 
 		});
+
+
 		
 	};
 

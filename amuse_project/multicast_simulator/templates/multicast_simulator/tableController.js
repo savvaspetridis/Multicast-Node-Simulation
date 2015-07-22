@@ -1,4 +1,3 @@
-
 var app = angular.module('app', ['chart.js'] ).config(function($httpProvider) {
 $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -30,7 +29,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.throughput_wrapper = [];
 	$scope.throughput_graph = [];
 	$scope.throughput_wrapper.push($scope.throughput_graph);
-	$scope.series_throughput = ['throughput (megabits) vs. time (seconds)',];
+	$scope.series_throughput = ['throughput (bits per second) vs. time (seconds)',];
 
 	$scope.showGraphs = false;
 
@@ -46,7 +45,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.W_min = 4;
 	$scope.W_max = 16;
 	$scope.windowTime = 20;
-	$scope.A_max = 5;
+	$scope.A_max = 4;
 
 	// this is for the throughput calculation
 	$scope.throughput = 0;
@@ -100,6 +99,10 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		$scope.run_calculations();
 
+		$scope.Interval = $scope.intervalBuffer;
+
+
+
 		
 
 
@@ -109,10 +112,15 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 	$scope.run_calculations = function()
 	{
-		$scope.fetch();
 
 		$scope.numSlides = (8.0 / $scope.intervalCount);
-		
+		if($scope.i == $scope.numSlides + 1 || $scope.bit_rate != $scope.bit_rate_update)
+		{
+			$scope.i = 1;
+			
+		}
+
+		$scope.fetch();
 
 
 		// for min max avg node statistics
@@ -121,7 +129,6 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 		$scope.avgNode = 0.0;
 
 
-		//$scope.Interval; // set the interval equal to the ith index in the dataDump variable
 
 		
 		var currVals = $scope.intervalBuffer;
@@ -167,7 +174,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			{
 				var nodeColorBooleans = [];
 
-				if($scope.feedbackNodes[j][l] == 1) // green dotted line 
+				if($scope.feedbackNodes[j][l] > 0) // green dotted line 
 				{
 					nodeColorBooleans.push(true);
 
@@ -176,7 +183,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 				{
 					nodeColorBooleans.push(false);
 				}
-				if($scope.feedbackNodes[j][l] == -1) //Fuscia 
+				if($scope.feedbackNodes[j][l] < 0) // Light blue
 				{
 					nodeColorBooleans.push(true);
 
@@ -264,45 +271,51 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			intervalColors.push(areaColors);
 		}
 		$scope.classSelectors = intervalColors;	
+
+
 		
 		$scope.i = $scope.i+ 1;
 		$scope.totalTime = $scope.totalTime + 1;
 
-		
-		if($scope.i == $scope.numSlides +1 || $scope.bit_rate != $scope.bit_rate_update)
+		$scope.throughput = $scope.throughput_new - $scope.throughput_org;
+
+		if($scope.throughput_new < $scope.throughput_org)
 		{
-			$scope.i = 1;
+			$scope.throughput = $scope.throughput_new;
 		}
+
+
+		$scope.throughput_org = $scope.throughput_new;
+
+		
+
 
 
 		// add bit rate info to graph
 		$scope.times_graph.push($scope.COUNTER * $scope.intervalCount);
-		if($scope.times_graph.length > 120)
+		if($scope.times_graph.length > 30)
 		{
 			$scope.times_graph.shift();
 		}
 		$scope.bit_rates_wrapper[0].push($scope.bit_rate_update);
 
-		if($scope.bit_rates_wrapper[0].length >120)
+		if($scope.bit_rates_wrapper[0].length > 30)
 		{
 			$scope.bit_rates_wrapper[0].shift();
 		}
 
-		if($scope.throughput_new <= $scope.throughput_org)
-		{
-			$scope.throughput_org = 0;
-		}
 
-		$scope.throughput += $scope.throughput_new - $scope.throughput_org;
 
-		$scope.throughput_org = $scope.throughput_new;
 
-		$scope.throughput_wrapper[0].push($scope.throughput);
 
-		if($scope.throughput_wrapper[0].length >120)
+		$scope.throughput_wrapper[0].push($scope.throughput * 1440 * 8 / $scope.intervalCount);
+
+		if($scope.throughput_wrapper[0].length > 30)
 		{
 			$scope.throughput_wrapper[0].shift();
 		}
+
+		$scope.bit_rate_show = $scope.bit_rate;
 
 		$scope.bit_rate = $scope.bit_rate_update;
 
@@ -310,6 +323,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 		$scope.Interval = $scope.intervalBuffer;
 		$scope.showGraphs = true;
+
 
 
 
@@ -378,15 +392,17 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 			$scope.bit_rate_update = data.bit_rate;
 			$scope.throughput_new = data.throughput;
 
+
 		}).
 		error(function(data, status)
 		{
 			$scope.Interval = [0,0, 0];
 			$scope.feedbackNode = [];
-			console.log("here");
 
 
 		});
+
+
 		
 	};
 
