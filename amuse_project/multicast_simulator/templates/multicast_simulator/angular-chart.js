@@ -49,6 +49,7 @@
   function ChartJsProvider () {
     var options = {
       animation : false,
+      bezierCurve : false,
     };
     var ChartJs = {
       Chart: Chart,
