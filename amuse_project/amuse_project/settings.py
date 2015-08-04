@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mod_wsgi.server',
     'multicast_simulator',
 )
 
@@ -78,9 +79,9 @@ WSGI_APPLICATION = 'amuse_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test',
+        'NAME': 'dbamuse',
         'USER': 'postgres',
-        'PASSWORD': 'wko845',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
     }
