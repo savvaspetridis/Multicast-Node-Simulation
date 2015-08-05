@@ -12,12 +12,14 @@ from .forms import *
 import random
 import math
 import json
+import socket
 
 # video ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 from wsgiref.util import FileWrapper
 
 # global variables for rate adaption algorithm
 br_list = [6, 9, 12, 18, 24, 36, 48, 54]
+'''
 A_t_list = []
 M_t_list = []
 curr_interval = -1
@@ -25,11 +27,31 @@ curr_rate = 6
 window = 0
 change_time = 0  
 ref_time = 0
+'''
+
+# socket stuff below!!
+'''
+from django_socketio import events
+from django_socketio.channels import SocketIOChannelProxy
+from django_socketio.clients import client_start, client_end
+from django_socketio.utils import format_log
+'''
+
+def connect(request):
+
+    c_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    c_socket.connect(('localhost', 8089))
+    c_socket.send('hello')
+
+
+
+
+
 
 def video(request):
     file = FileWrapper(open('/Users/Savvas_Petridis/Desktop/taters.mp4', 'rb'))
     response = HttpResponse(file, content_type='video/mp4')
-    response['Content-Disposition'] = 'attachment; filename=taters.mp4'
+    #response['Content-Disposition'] = 'attachment; filename=taters.mp4'
     
     return response
 
