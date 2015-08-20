@@ -220,7 +220,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					nodeColorBooleans.push(false);
 				}
 
-				if(currVals[j][l] == 0.1) // dark_grey
+				if(currVals[j][l] == -0.1) // dark_grey
 				{
 					nodeColorBooleans.push(true);
 					$scope.avgCheck = $scope.avgCheck + 1;
