@@ -45,7 +45,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 	$scope.W_min = 4;
 	$scope.W_max = 16;
 	$scope.windowTime = 20;
-	$scope.A_max = 4;
+	$scope.A_max = 10;
 
 	// this is for the throughput calculation
 	$scope.throughput = 0;
@@ -220,7 +220,7 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 					nodeColorBooleans.push(false);
 				}
 
-				if(currVals[j][l] == -100.0) // black
+				if(currVals[j][l] == 0.1) // dark_grey
 				{
 					nodeColorBooleans.push(true);
 					$scope.avgCheck = $scope.avgCheck + 1;
@@ -416,4 +416,3 @@ app.controller('theController', ['$scope', '$interval', '$http', '$templateCache
 
 	//$scope.play();
 }]);
-
