@@ -102,12 +102,12 @@
 
 NOTE: If you're having issues with migrations (python manage.py makemigrations/migrate/runserserver aren't working) try turn off the virtual environment. 
 
-Video Setup:
+# Video Setup:
 
 Note: The video is the most complicated feature on the app, and setup on each system so far has been different.
 
 1. In Demo/amuse_project run 'make'. This will create the 'correlator' executable which actually modifies the video.
 2. In Demo/amuse_project run the following command to generate the directory structure to play the 'football' video. Detailed instructions on how to play different videos will be given in the section on modifying video functionality.
-	./splice_video.sh Football ../Video/football.y4m 1020K 1440K 1800K 2480K 3060K 4000K 4660K 4900K 8
+		./splice_video.sh Football ../Video/football.y4m 1020K 1440K 1800K 2480K 3060K 4000K 4660K 4900K 8
 
 
