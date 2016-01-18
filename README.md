@@ -206,4 +206,8 @@ Before you try add new scripts you need to add the dpkt library. to do this go t
 
 		cp ./multicast_simulator/pcapScripts/DjangoQueries*.py ./DjangoQueries_*.py
  
-15.  
+15.  Run the new python script to add the entries to the Database:
+
+		python DjangoQueries_*.py
+
+16.  
