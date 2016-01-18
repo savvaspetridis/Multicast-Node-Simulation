@@ -27,7 +27,7 @@
 
 6. Add the rest of the dependencies to the virtual environment
 
-    	pip install django
+    	pip install django==1.8.5
     	pip install psycopg2
 
 7. Install PostgreSQL: http://www.postgresql.org/download/
@@ -201,4 +201,5 @@ Before you try add new scripts you need to add the dpkt library. to do this go t
   where * is the name of your script
 
 13. Now try run the script. This may take a while (upwards of half an hour for 10 second intervals at each bitrate).
+14. Once the script has finished exe
  
