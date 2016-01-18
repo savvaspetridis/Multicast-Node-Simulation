@@ -102,7 +102,6 @@
 
 NOTE: If you're having issues with migrations (python manage.py makemigrations/migrate/runserserver aren't working) try turn off the virtual environment. 
 
-At some point, you will also need to install psycopg2. Follow the instructions on this link http://initd.org/psycopg/docs/install.html
 
 # Video Setup:
 
