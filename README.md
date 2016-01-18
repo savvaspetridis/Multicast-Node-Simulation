@@ -173,4 +173,21 @@ Overview: To add a new dataset you must first add the information from an experi
 		
 		python addAvgDjangoTable.py ./set_1 54 1 6 2015 12 42 44 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
 
-4. copy
+4. In the line:
+ 
+
+
+		echo "import os
+		os.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"amuse_project.settings\")
+		# your imports, e.g. Django models
+		from multicast_simulator.models import Node, Packet_List" > DjangoQueries_set_1.py
+
+    Replace 'DjangoQueries_set_1.py' or the name of the script the script generates to the name you want that script to have (for convention it should probably be something like DjangoQueries_{experiment name you specify for the queries}
+
+5. Open bitrate_log.txt in new experiment directory and copy contents and replace the access point information (the nine lines commented out two lines bellow #!/bin/sh) in your new file with the copied contents. Be sure to comment it out.
+6. Replace 1st command line argument (./set1 in this example) in each 'python addAvgDjangoTable.py ..." line of the script with the new path to the new dataset directory in Demo/amuse_project/multicast_simulator/pcapScripts/Datasets.
+6. The 2nd command line argument in each of these commands is the bit-rate, so you'll probably want to leave that alone unless you're adding a dataset with a bit-rate which is not in the set {6, 9, 12, 18, 24, 36, 48, 54} (all MBPS) or adding a dataset without one of these bitrates, in which case there may be extra steps needed. 
+7. The 3rd (day), 4th (month), 5th (year), 6th (hour), 7th (minute) and 8th (second) command line arguments correspond to the start time of the bit-rate in the given experiment.  Copy these values for each bit rate bitrate_log.txt. Keep in mind you probably want to shave off the first second (record the seconds in this script as one or two more than in bitrates.txt) or two of each experiment to ignore eronious interference. 
+8. The 9th command line argument is the length of the experiment, or how many seconds after the start time the script will take into account when generating queries. 
+9. The 10th command line argment is the name of the experiment you want in the Django database. This should probably be the same for all experiments. 
+10.
