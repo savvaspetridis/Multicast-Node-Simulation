@@ -201,5 +201,9 @@ Before you try add new scripts you need to add the dpkt library. to do this go t
   where * is the name of your script
 
 13. Now try run the script. This may take a while (upwards of half an hour for 10 second intervals at each bitrate).
-14. Once the script has finished exe
+14. Once the script has finished executing, reactivate your virtual environment and copy the DjangoQueries*.py (where DjangoQueries*.py is the file the shell script generated) to the same directory as manage.py. Do this by going to /Demo/amuse_project and running:
+
+
+		cp ./multicast_simulator/pcapScripts/DjangoQueries*.py ./DjangoQueries_*.py
  
+15.  
