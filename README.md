@@ -112,3 +112,65 @@ Note: The video is the most complicated feature on the app, and setup on each sy
 			./splice_video.sh Football ../Video/football.y4m 1020K 1440K 1800K 2480K 3060K 4000K 4660K 4900K 8
 
 
+
+# Add a New Dataset
+
+Overview: To add a new dataset you must first add the information from an experiment to the Django database. This is done by writing a script (in this example addAllDjangoTables.py) which generates a script (Django_Queries_set_1.py) which when run in the /Demo/amuse_project directory will add the new dataset to the Django database.
+
+1.  Copy tar file of the new dataset to Demo/amuse_project/multicast_simulator/pcapScripts/Datasets
+2.  Create a new file in pcapScripts and save it as *.py where *.py is the name of the script.
+3.  Open addAllDjangoTables.py script and copy the contents to your new file. The format of the new python script should be something like this:
+
+
+		#!/bin/sh
+
+
+		# 2015-01-06 12:41:32 - AP sets TX PHY bitrate to 6Mbps
+		# 2015-01-06 12:41:42 - AP sets TX PHY bitrate to 9Mbps
+		# 2015-01-06 12:41:52 - AP sets TX PHY bitrate to 12Mbps
+		# 2015-01-06 12:42:02 - AP sets TX PHY bitrate to 18Mbps
+		# 2015-01-06 12:42:12 - AP sets TX PHY bitrate to 24Mbps
+		# 2015-01-06 12:42:23 - AP sets TX PHY bitrate to 36Mbps
+		# 2015-01-06 12:42:33 - AP sets TX PHY bitrate to 48Mbps
+		# 2015-01-06 12:42:43 - AP sets TX PHY bitrate to 54Mbps
+		# 2015-01-06 12:42:53 - End of experiment
+		
+		echo "import os
+		os.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"amuse_project.settings\")
+		# your imports, e.g. Django models
+		from multicast_simulator.models import Node, Packet_List" > DjangoQueries_set_1.py
+		
+		# 6 mbps:
+		
+		
+		python addAvgDjangoTable.py ./set_1 6 1 6 2015 12 41 34 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 9 mbps
+		
+		python addAvgDjangoTable.py ./set_1 9 1 6 2015 12 41 43 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 12 mbps
+		
+		python addAvgDjangoTable.py ./set_1 12 1 6 2015 12 41 53 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 18 mbps
+		
+		python addAvgDjangoTable.py ./set_1 18 1 6 2015 12 42 03 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 24 mbps
+		
+		python addAvgDjangoTable.py ./set_1 24 1 6 2015 12 42 13 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 36 mbps
+		
+		python addAvgDjangoTable.py ./set_1 36 1 6 2015 12 42 24 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 48 mbps
+		
+		python addAvgDjangoTable.py ./set_1 48 1 6 2015 12 42 34 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+		
+		# 54 mbps 
+		
+		python addAvgDjangoTable.py ./set_1 54 1 6 2015 12 42 44 8 set_1_1 0.5 1 2 >> DjangoQueries_set_1.py
+
+4. copy
