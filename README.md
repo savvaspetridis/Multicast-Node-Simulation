@@ -198,7 +198,7 @@ Before you try add new scripts you need to add the dpkt library. to do this go t
 
 		chmod 755 *.sh 
 
-where * is the name of your script
+  where * is the name of your script
 
 13. Now try run the script. This may take a while (upwards of half an hour for 10 second intervals at each bitrate).
  
