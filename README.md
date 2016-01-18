@@ -190,4 +190,6 @@ Overview: To add a new dataset you must first add the information from an experi
 7. The 3rd (day), 4th (month), 5th (year), 6th (hour), 7th (minute) and 8th (second) command line arguments correspond to the start time of the bit-rate in the given experiment.  Copy these values for each bit rate bitrate_log.txt. Keep in mind you probably want to shave off the first second (record the seconds in this script as one or two more than in bitrates.txt) or two of each experiment to ignore eronious interference. 
 8. The 9th command line argument is the length of the experiment, or how many seconds after the start time the script will take into account when generating queries. 
 9. The 10th command line argment is the name of the experiment you want in the Django database. This should probably be the same for all experiments. 
-10.
+10. As in step 4, replace all instances of the old script name (in this case Django_Queries_set_1.py) with the name of the script this script will generate.
+11. Save the script and run it. This may take a while (upwards of half an hour for 10 second intervals at each bitrate)
+12. 
