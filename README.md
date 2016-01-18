@@ -115,11 +115,13 @@ Note: The video is the most complicated feature on the app, and setup on each sy
 
 # Add a New Dataset
 
-Overview: To add a new dataset you must first add the information from an experiment to the Django database. This is done by writing a script (in this example addAllDjangoTables.py) which generates a script (Django_Queries_set_1.py) which when run in the /Demo/amuse_project directory will add the new dataset to the Django database.
+Overview: To add a new dataset you must first add the information from an experiment to the Django database. This is done by writing a shell script (in this example addAllDjangoTables.py) which generates a python script (Django_Queries_set_1.py in this example) which when run in the /Demo/amuse_project directory will add the new dataset to the Django database.
 
-1.  Copy tar file of the new dataset to Demo/amuse_project/multicast_simulator/pcapScripts/Datasets
-2.  Create a new file in pcapScripts and save it as *.py where *.py is the name of the script.
-3.  Open addAllDjangoTables.py script and copy the contents to your new file. The format of the new python script should be something like this:
+Before you try add new scripts you need to add the dpkt library. to do this go to https://code.google.com/p/dpkt/downloads/list, download the apropriate distribution and run the installer. Then turn off your virtual environment and do as follows:
+
+1.  Copy tar file of the new dataset to Demo/amuse_project/multicast_simulator/pcapScripts/Datasets and expand it
+2.  Create a new file in pcapScripts and save it as *.sh where *.sh is the name of the script.
+3.  Open addAllDjangoTables.sh script and copy the contents to your new file. The format of the new python script should be something like this:
 
 
 		#!/bin/sh
@@ -191,5 +193,11 @@ Overview: To add a new dataset you must first add the information from an experi
 8. The 9th command line argument is the length of the experiment, or how many seconds after the start time the script will take into account when generating queries. 
 9. The 10th command line argment is the name of the experiment you want in the Django database. This should probably be the same for all experiments. 
 10. As in step 4, replace all instances of the old script name (in this case Django_Queries_set_1.py) with the name of the script this script will generate.
-11. Save the script and run it. This may take a while (upwards of half an hour for 10 second intervals at each bitrate)
-12. 
+11. You then need to change the permissions on the new script you created so it is executable. Run:
+
+		chmod 755 *.sh 
+
+where * is the name of your script
+
+13. Now try run the script. This may take a while (upwards of half an hour for 10 second intervals at each bitrate).
+ 
